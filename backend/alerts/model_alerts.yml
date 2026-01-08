@@ -1,0 +1,120 @@
+# alerts/model_alerts.yml
+groups:
+  - name: model_performance
+    interval: 5m
+    rules:
+      # High latency alert
+      - alert: HighPredictionLatency
+        expr: histogram_quantile(0.95, rate(prediction_latency_seconds_bucket[5m])) > 0.5
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High prediction latency detected"
+          description: "95th percentile latency is {{ $value }}s (threshold: 0.5s)"
+
+      # Error rate alert
+      - alert: HighPredictionErrorRate
+        expr: rate(prediction_errors_total[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High prediction error rate"
+          description: "Error rate is {{ $value }} (threshold: 5%)"
+
+      # Model not loaded
+      - alert: ModelNotLoaded
+        expr: up{job="breast-cancer-api"} == 1 AND model_info == 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "ML model not loaded"
+          description: "Model {{ $labels.model }} is not loaded"
+
+      # Feature drift alert
+      - alert: FeatureDrift
+        expr: feature_drift_score > 0.2
+        for: 30m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Feature drift detected"
+          description: "Feature {{ $labels.feature }} drift score is {{ $value }}"
+
+  - name: system_health
+    interval: 1m
+    rules:
+      # API down
+      - alert: APIDown
+        expr: up{job="breast-cancer-api"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Breast Cancer API is down"
+          description: "API has been down for more than 2 minutes"
+
+      # High memory usage
+      - alert: HighMemoryUsage
+        expr: (node_memory_MemTotal_bytes - node_memory_MemFree_bytes) / node_memory_MemTotal_bytes > 0.9
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage detected"
+          description: "Memory usage is {{ $value | humanizePercentage }}"
+
+      # Database connection issues
+      - alert: DatabaseConnectionFailure
+        expr: pg_up == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Database connection failure"
+          description: "Cannot connect to PostgreSQL database"
+
+      # Redis down
+      - alert: RedisDown
+        expr: redis_up == 0
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Redis cache is down"
+          description: "Redis has been down for more than 2 minutes"
+
+  - name: usage_alerts
+    interval: 5m
+    rules:
+      # Unusual prediction volume
+      - alert: UnusualPredictionVolume
+        expr: rate(predictions_total[1h]) > 1000 OR rate(predictions_total[1h]) < 0.1
+        for: 15m
+        labels:
+          severity: info
+        annotations:
+          summary: "Unusual prediction volume"
+          description: "Prediction rate is {{ $value }} per second"
+
+      # High risk predictions spike
+      - alert: HighRiskPredictionSpike
+        expr: rate(predictions_total{risk_category="high"}[30m]) / rate(predictions_total[30m]) > 0.3
+        for: 30m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High proportion of high-risk predictions"
+          description: "{{ $value | humanizePercentage }} of predictions are high risk"
+
+      # Model version mismatch
+      - alert: ModelVersionMismatch
+        expr: count(count by (model_version) (predictions_total)) > 1
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Multiple model versions in use"
+          description: "Multiple model versions are serving predictions simultaneously"

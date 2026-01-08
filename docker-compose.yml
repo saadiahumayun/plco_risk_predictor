@@ -1,0 +1,116 @@
+# docker-compose.neon.yml
+# Docker Compose configuration using Neon PostgreSQL
+version: '3.8'
+
+services:
+  # MLflow Server (uses Neon for tracking)
+  mlflow:
+    image: python:3.9-slim
+    command: >
+      sh -c "pip install mlflow boto3 psycopg2-binary &&
+             mlflow server
+             --backend-store-uri ${MLFLOW_DATABASE_URL}
+             --default-artifact-root s3://${AWS_S3_BUCKET}/mlflow-artifacts
+             --host 0.0.0.0
+             --port 5000"
+    environment:
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      MLFLOW_DATABASE_URL: ${MLFLOW_DATABASE_URL}  # Neon connection string
+    ports:
+      - "5000:5000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Redis for caching (still local)
+  redis:
+    image: redis:7-alpine
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  # API Service
+  api:
+    build: .
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    environment:
+      # Use Neon for main database
+      DATABASE_URL: ${DATABASE_URL}  # Your Neon connection string
+      MLFLOW_DATABASE_URL: ${MLFLOW_DATABASE_URL}  # Can be same or different Neon DB
+      
+      # Redis (local)
+      REDIS_URL: redis://redis:6379
+      
+      # MLflow
+      MLFLOW_TRACKING_URI: http://mlflow:5000
+      
+      # Models
+      GA_MODEL_NAME: ${GA_MODEL_NAME:-breast_cancer_ga_model}
+      BASELINE_MODEL_NAME: ${BASELINE_MODEL_NAME:-breast_cancer_baseline_model}
+      MODEL_STAGE: ${MODEL_STAGE:-Production}
+      
+      # Other settings
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+      SECRET_KEY: ${SECRET_KEY}
+    ports:
+      - "8000:8000"
+      - "8001:8001"  # Prometheus metrics
+    volumes:
+      - ./app:/app/app
+      - ./logs:/app/logs
+    depends_on:
+      - redis
+      - mlflow
+
+  # NGINX (optional, for production)
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - api
+
+  # Prometheus (local monitoring)
+  prometheus:
+    image: prom/prometheus:latest
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./alerts:/etc/prometheus/alerts:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+
+  # Grafana (local dashboards)
+  grafana:
+    image: grafana/grafana:latest
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin123}
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/datasources:/etc/grafana/provisioning/datasources
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+
+volumes:
+  redis_data:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  default:
+    name: breast-cancer-network
