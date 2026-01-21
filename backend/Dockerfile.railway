@@ -21,9 +21,9 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copy application code
 COPY app/ ./app/
 
-# Copy the ML model file (you'll need to add this to your repo)
-# Option 1: Copy from repo if model is committed
-COPY models/ ./models/ 2>/dev/null || mkdir -p ./models
+# Create models directory and copy ML model files
+RUN mkdir -p ./models
+COPY models/ ./models/
 
 # Create directories for logs
 RUN mkdir -p /app/logs
