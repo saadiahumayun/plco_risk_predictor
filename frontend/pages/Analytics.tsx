@@ -43,20 +43,6 @@ const Analytics: React.FC = () => {
     { population: 'Asian', auc: 0.872, samples: 100 }
   ]
   
-  useEffect(() => {
-    // Fetch performance metrics from API
-    const fetchMetrics = async () => {
-      try {
-        const response = await axios.get('/api/v1/analytics/performance')
-        setPerformanceMetrics(response.data)
-      } catch (error) {
-        console.error('Error fetching metrics:', error)
-      }
-    }
-    
-    fetchMetrics()
-  }, [])
-  
   return (
     <div className="space-y-6">
       <div>
