@@ -1,24 +1,29 @@
 # app/services/mlflow_service.py
 """
 MLflow integration service for model loading, tracking, and management.
+MLflow is optional - if not installed, service runs in stub mode.
 """
-import mlflow
-import mlflow.sklearn
-import mlflow.pyfunc
-from mlflow.tracking import MlflowClient
 from typing import Dict, List, Optional, Any, Tuple
-import pandas as pd
-import numpy as np
 import logging
 from datetime import datetime
 import json
-from tenacity import retry, stop_after_attempt, wait_exponential
 
 from app.core.config import settings
 from app.models.schemas import ModelMetadata, ModelVersion
 
-
 logger = logging.getLogger(__name__)
+
+# Try to import mlflow - it's optional
+try:
+    import mlflow
+    import mlflow.sklearn
+    import mlflow.pyfunc
+    from mlflow.tracking import MlflowClient
+    from tenacity import retry, stop_after_attempt, wait_exponential
+    MLFLOW_AVAILABLE = True
+except ImportError:
+    MLFLOW_AVAILABLE = False
+    logger.warning("MLflow not installed - running in stub mode (pickle file loading only)")
 
 
 class MLflowService:
@@ -28,15 +33,6 @@ class MLflowService:
         self.tracking_uri = settings.MLFLOW_TRACKING_URI
         self.experiment_name = settings.MLFLOW_EXPERIMENT_NAME
         
-        # Set tracking URI
-        mlflow.set_tracking_uri(self.tracking_uri)
-        
-        # Create MLflow client
-        self.client = MlflowClient(tracking_uri=self.tracking_uri)
-        
-        # Set or create experiment
-        self._setup_experiment()
-        
         # Cache for loaded models
         self._model_cache = {}
         
@@ -44,10 +40,31 @@ class MLflowService:
         self.ga_model_metadata = None
         self.baseline_model_metadata = None
         
-        logger.info(f"MLflow service initialized with tracking URI: {self.tracking_uri}")
+        if MLFLOW_AVAILABLE:
+            try:
+                # Set tracking URI
+                mlflow.set_tracking_uri(self.tracking_uri)
+                
+                # Create MLflow client
+                self.client = MlflowClient(tracking_uri=self.tracking_uri)
+                
+                # Set or create experiment
+                self._setup_experiment()
+                
+                logger.info(f"MLflow service initialized with tracking URI: {self.tracking_uri}")
+            except Exception as e:
+                logger.warning(f"Failed to initialize MLflow: {e}")
+                self.client = None
+        else:
+            self.client = None
+            logger.info("MLflow service running in stub mode (no MLflow installed)")
     
     def _setup_experiment(self):
         """Set up MLflow experiment."""
+        if not MLFLOW_AVAILABLE or not self.client:
+            self.experiment_id = None
+            return
+            
         try:
             experiment = self.client.get_experiment_by_name(self.experiment_name)
             if experiment:
@@ -62,7 +79,6 @@ class MLflowService:
             logger.info("MLflow is not available - running in demo mode")
             self.experiment_id = None
     
-    @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10))
     def load_model(self, model_name: str, version: Optional[str] = None, stage: Optional[str] = None) -> Any:
         """
         Load a model from MLflow registry.
@@ -75,6 +91,10 @@ class MLflowService:
         Returns:
             Loaded model
         """
+        # If MLflow is not available, raise immediately so ml_service falls back to pickle
+        if not MLFLOW_AVAILABLE or not self.client:
+            raise RuntimeError("MLflow is not available - use pickle file loading instead")
+        
         cache_key = f"{model_name}_{version or stage or 'latest'}"
         
         # Check cache first
@@ -120,6 +140,8 @@ class MLflowService:
     
     def _load_model_metadata(self, model_name: str, version: Optional[str], stage: Optional[str]):
         """Load metadata for a model."""
+        if not MLFLOW_AVAILABLE or not self.client:
+            return
         try:
             if version:
                 model_version = self.client.get_model_version(model_name, version)
@@ -176,7 +198,7 @@ class MLflowService:
             latency_ms: Prediction latency in milliseconds
             metadata: Additional metadata
         """
-        if not settings.LOG_PREDICTIONS:
+        if not settings.LOG_PREDICTIONS or not MLFLOW_AVAILABLE:
             return
         
         try:
@@ -213,6 +235,8 @@ class MLflowService:
     
     def get_model_metrics(self, model_name: str, version: Optional[str] = None) -> Dict[str, float]:
         """Get metrics for a specific model version."""
+        if not MLFLOW_AVAILABLE or not self.client:
+            return {}
         try:
             if version:
                 model_version = self.client.get_model_version(model_name, version)
@@ -261,6 +285,8 @@ class MLflowService:
     
     def download_artifact(self, model_name: str, artifact_path: str, version: Optional[str] = None) -> str:
         """Download a specific artifact from a model run."""
+        if not MLFLOW_AVAILABLE or not self.client:
+            raise RuntimeError("MLflow is not available")
         try:
             if version:
                 model_version = self.client.get_model_version(model_name, version)
@@ -334,6 +360,8 @@ class MLflowService:
     
     def register_model(self, run_id: str, model_name: str, artifact_path: str = "model") -> ModelVersion:
         """Register a model from a run."""
+        if not MLFLOW_AVAILABLE or not self.client:
+            raise RuntimeError("MLflow is not available")
         try:
             # Register the model
             model_uri = f"runs:/{run_id}/{artifact_path}"
@@ -352,6 +380,8 @@ class MLflowService:
     
     def transition_model_stage(self, model_name: str, version: str, stage: str) -> None:
         """Transition a model version to a new stage."""
+        if not MLFLOW_AVAILABLE or not self.client:
+            raise RuntimeError("MLflow is not available")
         try:
             self.client.transition_model_version_stage(
                 name=model_name,
@@ -367,6 +397,8 @@ class MLflowService:
     
     def get_model_lineage(self, model_name: str, version: Optional[str] = None) -> Dict[str, Any]:
         """Get the lineage information for a model."""
+        if not MLFLOW_AVAILABLE or not self.client:
+            return {}
         try:
             if version:
                 model_version = self.client.get_model_version(model_name, version)
