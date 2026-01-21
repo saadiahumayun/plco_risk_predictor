@@ -75,26 +75,24 @@ app = FastAPI(
 )
 
 # Set up CORS
-if settings.BACKEND_CORS_ORIGINS:
-    # Check if wildcard is in origins
-    origins = [str(origin) for origin in settings.BACKEND_CORS_ORIGINS]
-    if "*" in origins:
-        # Allow all origins for demo/Vercel deployment
-        app.add_middleware(
-            CORSMiddleware,
-            allow_origins=["*"],
-            allow_credentials=False,  # Must be False when allow_origins=["*"]
-            allow_methods=["*"],
-            allow_headers=["*"],
-        )
-    else:
-        app.add_middleware(
-            CORSMiddleware,
-            allow_origins=origins,
-            allow_credentials=True,
-            allow_methods=["*"],
-            allow_headers=["*"],
-        )
+cors_origins = settings.get_cors_origins()
+if "*" in cors_origins:
+    # Allow all origins for demo/production deployment
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=False,  # Must be False when allow_origins=["*"]
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+else:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=cors_origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 # Add Prometheus metrics endpoint (if available)
 if PROMETHEUS_AVAILABLE:

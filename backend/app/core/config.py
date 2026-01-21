@@ -3,10 +3,11 @@
 Core configuration for the breast cancer risk prediction API.
 Integrates with MLflow for model serving and tracking.
 """
-from typing import List, Optional
+from typing import List, Optional, Union
 from pydantic_settings import BaseSettings
-from pydantic import AnyHttpUrl, validator
+from pydantic import field_validator
 import os
+import json
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -21,22 +22,21 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "Breast Cancer Risk Predictor"
     VERSION: str = "1.0.0"
     
-    # CORS Configuration - includes Vercel domains
-    BACKEND_CORS_ORIGINS: List[str] = [
-        "http://localhost:3000", 
-        "http://127.0.0.1:3000", 
-        "http://localhost:5173", 
-        "http://127.0.0.1:5173",
-        "*",  # Allow all origins for demo/Vercel deployment
-    ]
+    # CORS Configuration - use string type to avoid parsing issues
+    BACKEND_CORS_ORIGINS: str = "*"
     
-    @validator("BACKEND_CORS_ORIGINS", pre=True)
-    def assemble_cors_origins(cls, v):
-        if isinstance(v, str) and not v.startswith("["):
-            return [i.strip() for i in v.split(",")]
-        elif isinstance(v, list):
-            return v
-        return []
+    @field_validator("BACKEND_CORS_ORIGINS", mode="before")
+    @classmethod
+    def parse_cors_origins(cls, v):
+        if isinstance(v, list):
+            return ",".join(v)
+        return str(v) if v else "*"
+    
+    def get_cors_origins(self) -> List[str]:
+        """Get CORS origins as a list."""
+        if self.BACKEND_CORS_ORIGINS == "*":
+            return ["*"]
+        return [origin.strip() for origin in self.BACKEND_CORS_ORIGINS.split(",")]
     
     # Security
     SECRET_KEY: str = "your-secret-key-here-change-in-production"
@@ -64,19 +64,16 @@ class Settings(BaseSettings):
     MODEL_REGISTRY_URI: Optional[str] = None  # If None, uses MLFLOW_TRACKING_URI
     
     # Feature Configuration (from your GA results)
-    # Exact features from trained GA model (42 features in order)
-    GA_SELECTED_FEATURES: List[str] = [
-        'educat', 'marital', 'pipe', 'cigar', 'sisters', 'fmenstr',
-        'menstrs', 'miscar', 'tubal', 'uterine_fib', 'lmenstr', 'prega',
-        'thorm', 'hyperten_f', 'bronchit_f', 'diabetes_f', 'arthrit_f',
-        'gallblad_f', 'bq_age', 'hyster_f', 'ovariesr_f', 'bcontr_f',
-        'horm_f', 'smoked_f', 'rsmoker_f', 'cigpd_f', 'filtered_f',
-        'cig_years', 'bmi_20', 'bmi_curr', 'height_f', 'colon_comorbidity',
-        'fh_cancer', 'entryage_dhq', 'ph_any_bq', 'ph_any_dhq', 'ph_any_sqx',
-        'ph_any_trial', 'entrydays_bq', 'entrydays_dhq', 'arm', 'age'
-    ]
+    # Stored as comma-separated string to avoid env parsing issues
+    _GA_FEATURES_STR: str = "educat,marital,pipe,cigar,sisters,fmenstr,menstrs,miscar,tubal,uterine_fib,lmenstr,prega,thorm,hyperten_f,bronchit_f,diabetes_f,arthrit_f,gallblad_f,bq_age,hyster_f,ovariesr_f,bcontr_f,horm_f,smoked_f,rsmoker_f,cigpd_f,filtered_f,cig_years,bmi_20,bmi_curr,height_f,colon_comorbidity,fh_cancer,entryage_dhq,ph_any_bq,ph_any_dhq,ph_any_sqx,ph_any_trial,entrydays_bq,entrydays_dhq,arm,age"
     
-    BASELINE_FEATURES: List[str] = []  # Will load all available features
+    @property
+    def GA_SELECTED_FEATURES(self) -> List[str]:
+        return [f.strip() for f in self._GA_FEATURES_STR.split(",")]
+    
+    @property
+    def BASELINE_FEATURES(self) -> List[str]:
+        return []  # Will load all available features
     
     # Clinical Thresholds
     HIGH_RISK_THRESHOLD: float = 0.20  # 20% 5-year risk
