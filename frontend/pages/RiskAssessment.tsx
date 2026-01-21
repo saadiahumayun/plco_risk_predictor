@@ -23,6 +23,7 @@ interface PatientFormData {
   
   // Medical History
   personal_history_cancer: boolean
+  benign_breast_disease: boolean
   hormone_therapy: boolean
   years_of_hormone_use: number
   
