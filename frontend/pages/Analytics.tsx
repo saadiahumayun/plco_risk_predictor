@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react'
-import { BarChart, Bar, LineChart, Line, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
-import axios from 'axios'
+import React, { useState } from 'react'
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 
 const Analytics: React.FC = () => {
-  const [performanceMetrics, setPerformanceMetrics] = useState<any>(null)
   const [selectedTimeRange, setSelectedTimeRange] = useState('30days')
   
   // Feature importance data

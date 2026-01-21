@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 
 const Dashboard: React.FC = () => {
-  const [metrics, setMetrics] = useState({
+  const [metrics] = useState({
     totalAssessments: 1284,
     highRiskPatients: 89,
     averageRisk: 0.048,
