@@ -72,7 +72,7 @@ class MedicalHistory(BaseModel):
     """Medical history information."""
     personal_cancer_history: bool = Field(..., description="Any previous cancer diagnosis")
     benign_breast_disease: bool = Field(..., description="History of benign breast disease")
-    breast_biopsies: int = Field(..., ge=0, le=10, description="Number of breast biopsies")
+    breast_biopsies: Optional[int] = Field(0, ge=0, le=10, description="Number of breast biopsies")
     hormone_therapy_current: bool = Field(..., description="Currently using hormone therapy")
     hormone_therapy_years: Optional[float] = Field(None, ge=0, le=40, description="Years of hormone therapy")
     hormone_therapy_type: Optional[str] = Field(None, description="Type of hormone therapy")

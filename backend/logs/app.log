@@ -680,3 +680,57 @@
 {"timestamp": "2026-01-03T12:09:25.719637+00:00", "level": null, "name": "app.services.ml_service", "funcName": "_predict_with_baseline_model", "message": "Could not scale baseline features: This MinMaxScaler instance is not fitted yet. Call 'fit' with appropriate arguments before using this estimator."}
 {"timestamp": "2026-01-03T12:09:25.734567+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Completed POST /api/v1/predict with status 200 in 60.58ms"}
 {"timestamp": "2026-01-03T12:09:28.295214+00:00", "level": null, "name": "app.api.routes", "funcName": "save_prediction_to_db", "message": "Saved prediction 1767424165.68745_1 for patient PAT-1767442165643 to database"}
+{"timestamp": "2026-01-08T08:14:11.147638+00:00", "level": null, "name": "app.core.logging", "funcName": "setup_logging", "message": "Logging configured - Level: INFO, Format: json, Environment: development"}
+{"timestamp": "2026-01-08T08:14:11.152426+00:00", "level": null, "name": "app.main", "funcName": "lifespan", "message": "Starting up breast cancer risk prediction API..."}
+{"timestamp": "2026-01-08T08:14:11.152494+00:00", "level": null, "name": "app.db.session", "funcName": "init_db", "message": "Creating database tables..."}
+{"timestamp": "2026-01-08T08:14:17.926637+00:00", "level": null, "name": "app.db.session", "funcName": "init_db", "message": "Database tables created successfully"}
+{"timestamp": "2026-01-08T08:14:17.926765+00:00", "level": null, "name": "app.main", "funcName": "lifespan", "message": "Loading ML models from MLflow..."}
+{"timestamp": "2026-01-08T08:14:17.926811+00:00", "level": null, "name": "app.main", "funcName": "lifespan", "message": "Application startup complete"}
+{"timestamp": "2026-01-08T08:16:23.178900+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Incoming POST request to /api/v1/predict"}
+{"timestamp": "2026-01-08T08:16:23.181492+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Completed POST /api/v1/predict with status 422 in 2.62ms"}
+{"timestamp": "2026-01-08T08:16:26.401466+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Incoming POST request to /api/v1/predict"}
+{"timestamp": "2026-01-08T08:16:26.402195+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Completed POST /api/v1/predict with status 422 in 0.73ms"}
+{"timestamp": "2026-01-08T08:16:45.350186+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Incoming POST request to /api/v1/predict"}
+{"timestamp": "2026-01-08T08:16:45.351242+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Completed POST /api/v1/predict with status 422 in 1.05ms"}
+{"timestamp": "2026-01-09T02:10:06.613136+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Incoming POST request to /api/v1/predict"}
+{"timestamp": "2026-01-09T02:10:06.623217+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Completed POST /api/v1/predict with status 422 in 11.37ms"}
+{"timestamp": "2026-01-09T02:11:48.419327+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Incoming POST request to /api/v1/predict"}
+{"timestamp": "2026-01-09T02:11:48.431077+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Completed POST /api/v1/predict with status 422 in 11.78ms"}
+{"timestamp": "2026-01-09T02:12:02.554576+00:00", "level": null, "name": "app.main", "funcName": "lifespan", "message": "Shutting down application..."}
+{"timestamp": "2026-01-09T02:12:04.383086+00:00", "level": null, "name": "app.core.logging", "funcName": "setup_logging", "message": "Logging configured - Level: INFO, Format: json, Environment: development"}
+{"timestamp": "2026-01-09T02:12:04.388265+00:00", "level": null, "name": "app.main", "funcName": "lifespan", "message": "Starting up breast cancer risk prediction API..."}
+{"timestamp": "2026-01-09T02:12:04.388344+00:00", "level": null, "name": "app.db.session", "funcName": "init_db", "message": "Creating database tables..."}
+{"timestamp": "2026-01-09T02:12:10.823671+00:00", "level": null, "name": "app.db.session", "funcName": "init_db", "message": "Database tables created successfully"}
+{"timestamp": "2026-01-09T02:12:10.823818+00:00", "level": null, "name": "app.main", "funcName": "lifespan", "message": "Loading ML models from MLflow..."}
+{"timestamp": "2026-01-09T02:12:10.823865+00:00", "level": null, "name": "app.main", "funcName": "lifespan", "message": "Application startup complete"}
+{"timestamp": "2026-01-09T02:12:12.715043+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Incoming POST request to /api/v1/predict"}
+{"timestamp": "2026-01-09T02:12:12.727721+00:00", "level": null, "name": "app.services.ml_service", "funcName": "_predict_with_ga_model", "message": "Could not scale features: This MinMaxScaler instance is not fitted yet. Call 'fit' with appropriate arguments before using this estimator."}
+{"timestamp": "2026-01-09T02:12:12.744189+00:00", "level": null, "name": "app.services.ml_service", "funcName": "_predict_with_baseline_model", "message": "Could not scale baseline features: This MinMaxScaler instance is not fitted yet. Call 'fit' with appropriate arguments before using this estimator."}
+{"timestamp": "2026-01-09T02:12:12.759741+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Completed POST /api/v1/predict with status 200 in 44.70ms"}
+{"timestamp": "2026-01-09T02:12:13.688950+00:00", "level": null, "name": "app.api.routes", "funcName": "save_prediction_to_db", "message": "Saved prediction 1767906732.71932_0 for patient None to database"}
+{"timestamp": "2026-01-09T02:12:20.636872+00:00", "level": null, "name": "app.main", "funcName": "lifespan", "message": "Shutting down application..."}
+{"timestamp": "2026-01-09T02:12:22.111369+00:00", "level": null, "name": "app.core.logging", "funcName": "setup_logging", "message": "Logging configured - Level: INFO, Format: json, Environment: development"}
+{"timestamp": "2026-01-09T02:12:22.116536+00:00", "level": null, "name": "app.main", "funcName": "lifespan", "message": "Starting up breast cancer risk prediction API..."}
+{"timestamp": "2026-01-09T02:12:22.116603+00:00", "level": null, "name": "app.db.session", "funcName": "init_db", "message": "Creating database tables..."}
+{"timestamp": "2026-01-09T02:12:27.435820+00:00", "level": null, "name": "app.db.session", "funcName": "init_db", "message": "Database tables created successfully"}
+{"timestamp": "2026-01-09T02:12:27.435985+00:00", "level": null, "name": "app.main", "funcName": "lifespan", "message": "Loading ML models from MLflow..."}
+{"timestamp": "2026-01-09T02:12:27.436028+00:00", "level": null, "name": "app.main", "funcName": "lifespan", "message": "Application startup complete"}
+{"timestamp": "2026-01-09T02:12:45.045055+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Incoming POST request to /api/v1/predict"}
+{"timestamp": "2026-01-09T02:12:45.048495+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Completed POST /api/v1/predict with status 422 in 3.51ms"}
+{"timestamp": "2026-01-09T02:12:56.426863+00:00", "level": null, "name": "app.main", "funcName": "lifespan", "message": "Shutting down application..."}
+{"timestamp": "2026-01-09T02:12:59.243257+00:00", "level": null, "name": "app.core.logging", "funcName": "setup_logging", "message": "Logging configured - Level: INFO, Format: json, Environment: development"}
+{"timestamp": "2026-01-09T02:12:59.249835+00:00", "level": null, "name": "app.main", "funcName": "lifespan", "message": "Starting up breast cancer risk prediction API..."}
+{"timestamp": "2026-01-09T02:12:59.249934+00:00", "level": null, "name": "app.db.session", "funcName": "init_db", "message": "Creating database tables..."}
+{"timestamp": "2026-01-09T02:13:08.144944+00:00", "level": null, "name": "app.db.session", "funcName": "init_db", "message": "Database tables created successfully"}
+{"timestamp": "2026-01-09T02:13:08.145855+00:00", "level": null, "name": "app.main", "funcName": "lifespan", "message": "Loading ML models from MLflow..."}
+{"timestamp": "2026-01-09T02:13:08.145916+00:00", "level": null, "name": "app.main", "funcName": "lifespan", "message": "Application startup complete"}
+{"timestamp": "2026-01-09T02:13:39.620336+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Incoming POST request to /api/v1/predict"}
+{"timestamp": "2026-01-09T02:13:39.625378+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Completed POST /api/v1/predict with status 422 in 5.05ms"}
+{"timestamp": "2026-01-09T02:14:55.581402+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Incoming POST request to /api/v1/predict"}
+{"timestamp": "2026-01-09T02:14:55.592985+00:00", "level": null, "name": "app.services.ml_service", "funcName": "_predict_with_ga_model", "message": "Could not scale features: This MinMaxScaler instance is not fitted yet. Call 'fit' with appropriate arguments before using this estimator."}
+{"timestamp": "2026-01-09T02:14:55.613886+00:00", "level": null, "name": "app.services.ml_service", "funcName": "_predict_with_baseline_model", "message": "Could not scale baseline features: This MinMaxScaler instance is not fitted yet. Call 'fit' with appropriate arguments before using this estimator."}
+{"timestamp": "2026-01-09T02:14:55.629195+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Completed POST /api/v1/predict with status 200 in 47.89ms"}
+{"timestamp": "2026-01-09T02:14:56.460306+00:00", "level": null, "name": "app.api.routes", "funcName": "save_prediction_to_db", "message": "Saved prediction 1767906895.583335_0 for patient PAT-1767924895564 to database"}
+{"timestamp": "2026-01-09T03:54:50.753876+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Incoming GET request to /api/v1/docs"}
+{"timestamp": "2026-01-09T03:54:50.755618+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Completed GET /api/v1/docs with status 200 in 1.91ms"}
+{"timestamp": "2026-01-12T04:59:27.986047+00:00", "level": null, "name": "app.main", "funcName": "lifespan", "message": "Shutting down application..."}
