@@ -40,11 +40,15 @@ async def lifespan(app: FastAPI):
     # Startup
     logger.info("Starting up breast cancer risk prediction API...")
     
-    # Initialize database (skip in demo mode - SQLite doesn't support PostgreSQL types)
-    if settings.ENVIRONMENT not in ("demo", "test") and DB_AVAILABLE:
-        init_db()
+    # Initialize database (with graceful fallback)
+    if DB_AVAILABLE:
+        try:
+            init_db()
+        except Exception as e:
+            logger.warning(f"Database initialization failed: {e}")
+            logger.info("Continuing without database - predictions won't be saved")
     else:
-        logger.info("Skipping database initialization in demo mode")
+        logger.info("Database module not available - predictions won't be saved")
     
     # Load ML models
     logger.info("Loading ML models from MLflow...")

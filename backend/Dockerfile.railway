@@ -31,7 +31,8 @@ RUN mkdir -p /app/logs
 # Set environment variables
 ENV PYTHONPATH=/app \
     PYTHONUNBUFFERED=1 \
-    ENVIRONMENT=production
+    ENVIRONMENT=production \
+    USE_MODEL_REGISTRY=false
 
 # Expose default port (Railway overrides with $PORT at runtime)
 EXPOSE 8000

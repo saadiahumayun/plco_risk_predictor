@@ -90,7 +90,14 @@ class MLService:
         if pickle_path.exists():
             try:
                 logger.info(f"Loading model from pickle file: {pickle_path}")
-                experiment_data = joblib.load(pickle_path)
+                # Try joblib first, then pickle
+                try:
+                    experiment_data = joblib.load(pickle_path)
+                except (AttributeError, ModuleNotFoundError) as e:
+                    logger.warning(f"Joblib failed (likely custom class issue): {e}")
+                    import pickle
+                    with open(pickle_path, 'rb') as f:
+                        experiment_data = pickle.load(f)
                 
                 # Extract the best model from the experiment data
                 if isinstance(experiment_data, dict):
