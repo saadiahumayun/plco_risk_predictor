@@ -62,8 +62,29 @@ class MLService:
     def _load_models(self):
         """Load ML models - try pickle file first, then MLflow, then demo mode."""
         
-        # Path to pickle file with trained model
-        pickle_path = Path("/Users/saadiahumayun/Documents/Thesis experiments/ga_f1_multi_population_experiment.pkl")
+        # Multiple possible locations for the model pickle file
+        model_locations = [
+            # Railway/Docker deployment path
+            Path("/app/models/ga_model.pkl"),
+            # Backend models directory
+            Path(__file__).parent.parent.parent / "models" / "ga_model.pkl",
+            # Local development path (your machine)
+            Path("/Users/saadiahumayun/Documents/Thesis experiments/ga_f1_multi_population_experiment.pkl"),
+            # Alternative names
+            Path("/app/models/ga_f1_multi_population_experiment.pkl"),
+        ]
+        
+        # Find the first existing model file
+        pickle_path = None
+        for path in model_locations:
+            if path.exists():
+                pickle_path = path
+                logger.info(f"Found model at: {pickle_path}")
+                break
+        
+        if pickle_path is None:
+            logger.warning("No local model file found, will try MLflow...")
+            pickle_path = Path("/nonexistent")  # Will fail exists() check
         
         # Try loading from pickle file first
         if pickle_path.exists():

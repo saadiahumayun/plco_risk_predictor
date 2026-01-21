@@ -1,0 +1,37 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/index.py",
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": "50mb"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/v1/(.*)",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/health",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/metrics",
+      "dest": "api/index.py"
+    }
+  ],
+  "env": {
+    "ENVIRONMENT": "demo",
+    "USE_MODEL_REGISTRY": "false",
+    "ENABLE_MONITORING": "false",
+    "LOG_PREDICTIONS": "false"
+  }
+}
+

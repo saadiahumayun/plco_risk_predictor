@@ -8,10 +8,31 @@ from typing import Dict, List, Any, Optional
 import logging
 from collections import defaultdict, deque
 import numpy as np
-from prometheus_client import Counter, Histogram, Gauge, Info
 import asyncio
 
 from app.core.config import settings
+
+# Try to import Prometheus, create stubs if not available
+try:
+    from prometheus_client import Counter, Histogram, Gauge, Info
+    PROMETHEUS_AVAILABLE = True
+except ImportError:
+    PROMETHEUS_AVAILABLE = False
+    # Create stub classes that do nothing
+    class StubMetric:
+        def __init__(self, *args, **kwargs):
+            pass
+        def labels(self, *args, **kwargs):
+            return self
+        def inc(self, *args, **kwargs):
+            pass
+        def observe(self, *args, **kwargs):
+            pass
+        def set(self, *args, **kwargs):
+            pass
+        def info(self, *args, **kwargs):
+            pass
+    Counter = Histogram = Gauge = Info = StubMetric
 from app.models.schemas import ModelHealth, SystemHealth, HealthStatus
 
 

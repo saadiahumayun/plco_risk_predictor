@@ -42,6 +42,11 @@ def save_prediction_to_db(
     user_id: Optional[str] = None
 ):
     """Save a prediction to the database."""
+    # Skip database save in demo mode
+    if settings.ENVIRONMENT in ("demo", "test"):
+        logger.info(f"Demo mode: Skipping database save for prediction {response_data.get('prediction_id')}")
+        return
+    
     from app.db.session import SessionLocal
     
     db = SessionLocal()

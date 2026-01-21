@@ -13,8 +13,6 @@ from dotenv import load_dotenv
 # Explicitly load .env file from backend directory
 env_path = Path(__file__).resolve().parent.parent.parent / ".env"
 load_dotenv(env_path)
-print(f"Loading .env from: {env_path}, exists: {env_path.exists()}")
-print(f"DATABASE_URL from env: {os.getenv('DATABASE_URL', 'NOT SET')[:50]}...")
 
 
 class Settings(BaseSettings):
@@ -23,8 +21,14 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "Breast Cancer Risk Predictor"
     VERSION: str = "1.0.0"
     
-    # CORS Configuration
-    BACKEND_CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:5173", "http://127.0.0.1:5173"]
+    # CORS Configuration - includes Vercel domains
+    BACKEND_CORS_ORIGINS: List[str] = [
+        "http://localhost:3000", 
+        "http://127.0.0.1:3000", 
+        "http://localhost:5173", 
+        "http://127.0.0.1:5173",
+        "*",  # Allow all origins for demo/Vercel deployment
+    ]
     
     @validator("BACKEND_CORS_ORIGINS", pre=True)
     def assemble_cors_origins(cls, v):

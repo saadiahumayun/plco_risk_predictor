@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Build outputs
+dist/
+build/
+*.egg-info/
+
+# Logs
+logs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Large model files - use Git LFS for these
+# Uncomment if model is too large (>100MB)
+# backend/models/*.pkl
+
+# MLflow artifacts (local)
+mlruns/
+mlartifacts/
+
+# Test coverage
+.coverage
+htmlcov/
+

@@ -8,14 +8,25 @@ from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
 import logging
 import time
-from prometheus_client import make_asgi_app
 
 from app.core.config import settings
 from app.api import routes
 from app.core.logging import setup_logging
 from app.services.ml_service import ml_service
 from app.services.monitoring import monitoring_service
-from app.db.base import init_db
+
+# Optional imports for non-demo environments
+try:
+    from prometheus_client import make_asgi_app
+    PROMETHEUS_AVAILABLE = True
+except ImportError:
+    PROMETHEUS_AVAILABLE = False
+    
+try:
+    from app.db.base import init_db
+    DB_AVAILABLE = True
+except ImportError:
+    DB_AVAILABLE = False
 
 
 # Setup logging
@@ -30,7 +41,7 @@ async def lifespan(app: FastAPI):
     logger.info("Starting up breast cancer risk prediction API...")
     
     # Initialize database (skip in demo mode - SQLite doesn't support PostgreSQL types)
-    if settings.ENVIRONMENT not in ("demo", "test"):
+    if settings.ENVIRONMENT not in ("demo", "test") and DB_AVAILABLE:
         init_db()
     else:
         logger.info("Skipping database initialization in demo mode")
@@ -65,17 +76,30 @@ app = FastAPI(
 
 # Set up CORS
 if settings.BACKEND_CORS_ORIGINS:
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=[str(origin) for origin in settings.BACKEND_CORS_ORIGINS],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
+    # Check if wildcard is in origins
+    origins = [str(origin) for origin in settings.BACKEND_CORS_ORIGINS]
+    if "*" in origins:
+        # Allow all origins for demo/Vercel deployment
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=["*"],
+            allow_credentials=False,  # Must be False when allow_origins=["*"]
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
+    else:
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=origins,
+            allow_credentials=True,
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
 
-# Add Prometheus metrics endpoint
-metrics_app = make_asgi_app()
-app.mount("/metrics", metrics_app)
+# Add Prometheus metrics endpoint (if available)
+if PROMETHEUS_AVAILABLE:
+    metrics_app = make_asgi_app()
+    app.mount("/metrics", metrics_app)
 
 # Include API routes
 app.include_router(routes.api_router, prefix=settings.API_V1_STR)

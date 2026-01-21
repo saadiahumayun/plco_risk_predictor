@@ -5,11 +5,18 @@ Logging configuration for the application.
 import logging
 import sys
 from pathlib import Path
-from pythonjsonlogger import jsonlogger
 from logging.handlers import RotatingFileHandler
 import os
 
 from app.core.config import settings
+
+# Try to import JSON logger
+try:
+    from pythonjsonlogger import jsonlogger
+    JSON_LOGGER_AVAILABLE = True
+except ImportError:
+    JSON_LOGGER_AVAILABLE = False
+    jsonlogger = None
 
 
 def setup_logging():
@@ -29,14 +36,14 @@ def setup_logging():
     console_handler.setLevel(log_level)
     
     # Set formatter based on configuration
-    if settings.LOG_FORMAT == "json":
+    if settings.LOG_FORMAT == "json" and JSON_LOGGER_AVAILABLE:
         # JSON formatter for production
         formatter = jsonlogger.JsonFormatter(
             "%(timestamp)s %(level)s %(name)s %(funcName)s %(message)s",
             timestamp=True
         )
     else:
-        # Human-readable formatter for development
+        # Human-readable formatter for development (or fallback)
         formatter = logging.Formatter(
             "%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s"
         )
