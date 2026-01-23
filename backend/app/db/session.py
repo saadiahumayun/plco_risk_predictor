@@ -41,21 +41,30 @@ def _create_postgres_engine(database_url: str):
 
 # Determine database URL
 database_url = os.environ.get("DATABASE_URL", settings.DATABASE_URL)
+logger.info(f"DATABASE_URL from env: {'SET' if os.environ.get('DATABASE_URL') else 'NOT SET'}")
+logger.info(f"Database URL starts with: {database_url[:30] if database_url else 'None'}...")
+logger.info(f"Environment: {settings.ENVIRONMENT}")
 
-# Check if we should use SQLite (only for test mode)
+# Check if we should use SQLite (only for test mode or default localhost URL)
 use_sqlite = (
     settings.ENVIRONMENT == "test" or
-    database_url == "postgresql://user:password@localhost/breast_cancer_db"
+    database_url == "postgresql://user:password@localhost/breast_cancer_db" or
+    not database_url or
+    "localhost" in database_url
 )
 
+logger.info(f"Use SQLite: {use_sqlite}")
+
 if use_sqlite:
+    logger.warning("Using SQLite - DATABASE_URL not properly configured for production!")
     engine = _create_sqlite_engine()
 else:
     try:
+        logger.info(f"Attempting PostgreSQL connection...")
         engine = _create_postgres_engine(database_url)
     except Exception as e:
-        logger.warning(f"Failed to connect to PostgreSQL: {e}")
-        logger.info("Falling back to in-memory SQLite database")
+        logger.error(f"Failed to connect to PostgreSQL: {e}")
+        logger.warning("Falling back to in-memory SQLite database")
         engine = _create_sqlite_engine()
 
 # Create session factory
