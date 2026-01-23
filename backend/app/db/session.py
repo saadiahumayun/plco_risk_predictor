@@ -45,13 +45,14 @@ logger.info(f"DATABASE_URL from env: {'SET' if os.environ.get('DATABASE_URL') el
 logger.info(f"Database URL starts with: {database_url[:30] if database_url else 'None'}...")
 logger.info(f"Environment: {settings.ENVIRONMENT}")
 
-# Check if we should use SQLite (only for test mode or default localhost URL)
+# Check if we should use SQLite (only for test mode or missing/default URL)
+is_default_url = database_url == "postgresql://user:password@localhost/breast_cancer_db"
 use_sqlite = (
     settings.ENVIRONMENT == "test" or
-    database_url == "postgresql://user:password@localhost/breast_cancer_db" or
-    not database_url or
-    "localhost" in database_url
+    is_default_url or
+    not database_url
 )
+logger.info(f"Is default URL: {is_default_url}")
 
 logger.info(f"Use SQLite: {use_sqlite}")
 

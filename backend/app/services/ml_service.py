@@ -531,10 +531,10 @@ class MLService:
                 feature='benign_breast_disease', importance=0.05, value=0.0,
                 contribution=-0.01, description='No history of benign breast disease'
             ))
-                
-                # Sort by absolute contribution
-                feature_importance_list.sort(key=lambda x: abs(x.contribution), reverse=True)
-                
+        
+        # Sort by absolute contribution
+        feature_importance_list.sort(key=lambda x: abs(x.contribution), reverse=True)
+        
         return feature_importance_list[:8]  # Top 8 factors
     
     def _calculate_risk_percentile(self, risk_score: float) -> int:
