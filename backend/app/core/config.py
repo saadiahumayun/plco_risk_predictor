@@ -75,9 +75,10 @@ class Settings(BaseSettings):
     def BASELINE_FEATURES(self) -> List[str]:
         return []  # Will load all available features
     
-    # Clinical Thresholds
-    HIGH_RISK_THRESHOLD: float = 0.20  # 20% 5-year risk
-    MODERATE_RISK_THRESHOLD: float = 0.10  # 10% 5-year risk
+    # Clinical Thresholds (based on clinical guidelines)
+    # Gail model uses 1.67% as threshold for chemoprevention
+    HIGH_RISK_THRESHOLD: float = 0.03  # 3% 5-year risk
+    MODERATE_RISK_THRESHOLD: float = 0.015  # 1.5% 5-year risk
     
     # Model Performance Thresholds (for monitoring)
     MIN_AUC_THRESHOLD: float = 0.85
