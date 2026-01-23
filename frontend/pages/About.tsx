@@ -125,7 +125,7 @@ const About: React.FC = () => {
       >
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">Clinical Guidelines</h2>
         
-        <div className="bg-blue-50 border-l-4 border-primary p-4 mb-4">
+        <div className="bg-rose-50 border-l-4 border-primary p-4 mb-4">
           <p className="text-sm text-gray-700">
             <strong>Important:</strong> This tool is designed to assist clinical decision-making, 
             not replace professional judgment. All risk assessments should be interpreted in the 

@@ -43,17 +43,14 @@ const RiskAssessment: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [result, setResult] = useState<any>(null)
   
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<PatientFormData>()
+  const { register, handleSubmit, watch, reset, formState: { errors } } = useForm<PatientFormData>()
   
-  const totalSteps = 3  // 3 form steps: Demographics, Reproductive, Health & Medical
-  
+  const totalSteps = 3
 
   const onSubmit = async (data: PatientFormData) => {
     setIsLoading(true)
-    
     try {
       const response = await predictRisk(data)
-      
       const displayResult = {
         risk_assessment: {
           five_year_risk: response.risk_score,
@@ -80,9 +77,8 @@ const RiskAssessment: React.FC = () => {
         },
         report: { report_id: response.prediction_id, format: "pdf", sections: ["executive_summary", "detailed_risk_assessment", "risk_factor_analysis", "clinical_recommendations"] }
       }
-      
       setResult(displayResult)
-      setCurrentStep(4)  // Go to results page
+      setCurrentStep(4)
     } catch (error) {
       console.error("Prediction error:", error)
       alert("Error generating prediction. Please try again.")
@@ -90,6 +86,7 @@ const RiskAssessment: React.FC = () => {
       setIsLoading(false)
     }
   }
+
   const nextStep = () => setCurrentStep(prev => Math.min(prev + 1, totalSteps))
   const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 1))
   
@@ -98,24 +95,19 @@ const RiskAssessment: React.FC = () => {
       case 1:
         return (
           <motion.div
+            key="demographics-step"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             className="space-y-6"
           >
             <h2 className="text-2xl font-semibold text-gray-800">Demographics</h2>
-            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="clinical-label">Age *</label>
-                <input
-                  type="number"
-                  className="clinical-input"
-                  {...register('age', { required: true, min: 40, max: 80 })}
-                />
+                <input type="number" className="clinical-input" {...register('age', { required: true, min: 40, max: 80 })} />
                 {errors.age && <span className="text-red-500 text-sm">Age must be between 40-80</span>}
               </div>
-              
               <div>
                 <label className="clinical-label">Race/Ethnicity *</label>
                 <select className="clinical-input" {...register('race', { required: true })}>
@@ -127,7 +119,6 @@ const RiskAssessment: React.FC = () => {
                   <option value="other">Other</option>
                 </select>
               </div>
-              
               <div>
                 <label className="clinical-label">Education Level *</label>
                 <select className="clinical-input" {...register('education_level', { required: true })}>
@@ -141,7 +132,6 @@ const RiskAssessment: React.FC = () => {
                   <option value="7">Postgraduate</option>
                 </select>
               </div>
-              
               <div>
                 <label className="clinical-label">Marital Status *</label>
                 <select className="clinical-input" {...register('marital_status', { required: true })}>
@@ -152,7 +142,6 @@ const RiskAssessment: React.FC = () => {
                   <option value="widowed">Widowed</option>
                 </select>
               </div>
-              
               <div>
                 <label className="clinical-label">Occupation Category *</label>
                 <select className="clinical-input" {...register('occupation', { required: true })}>
@@ -169,128 +158,70 @@ const RiskAssessment: React.FC = () => {
             </div>
           </motion.div>
         )
-        
       case 2:
         return (
           <motion.div
+            key="reproductive-step"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             className="space-y-6"
           >
             <h2 className="text-2xl font-semibold text-gray-800">Reproductive History</h2>
-            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="clinical-label">Age at First Menstruation *</label>
-                <input
-                  type="number"
-                  step="0.5"
-                  className="clinical-input"
-                  {...register('age_at_menarche', { required: true, min: 8, max: 20 })}
-                />
+                <input type="number" step="0.5" className="clinical-input" {...register('age_at_menarche', { required: true, min: 8, max: 20 })} />
               </div>
-              
               <div>
                 <label className="clinical-label">Age at First Live Birth</label>
-                <input
-                  type="number"
-                  className="clinical-input"
-                  {...register('age_at_first_birth', { min: 10, max: 50 })}
-                  placeholder="Leave blank if no live births"
-                />
+                <input type="number" className="clinical-input" {...register('age_at_first_birth', { min: 10, max: 50 })} placeholder="Leave blank if no live births" />
               </div>
-              
               <div>
                 <label className="clinical-label">Number of Live Births *</label>
-                <input
-                  type="number"
-                  className="clinical-input"
-                  {...register('number_of_live_births', { required: true, min: 0, max: 15 })}
-                />
+                <input type="number" className="clinical-input" {...register('number_of_live_births', { required: true, min: 0, max: 15 })} />
               </div>
-              
               <div>
-                <label className="clinical-label">
-                  First-Degree Relatives with Breast Cancer *
-                </label>
-                <input
-                  type="number"
-                  className="clinical-input"
-                  {...register('number_of_relatives_with_bc', { required: true, min: 0, max: 5 })}
-                />
+                <label className="clinical-label">First-Degree Relatives with Breast Cancer *</label>
+                <input type="number" className="clinical-input" {...register('number_of_relatives_with_bc', { required: true, min: 0, max: 5 })} />
                 <p className="text-xs text-gray-500 mt-1">Mother, sisters, daughters</p>
               </div>
-              
               <div>
                 <label className="clinical-label">Years of Birth Control Use</label>
-                <input
-                  type="number"
-                  step="0.5"
-                  className="clinical-input"
-                  {...register('birth_control_years', { min: 0, max: 30 })}
-                />
+                <input type="number" step="0.5" className="clinical-input" {...register('birth_control_years', { min: 0, max: 30 })} />
               </div>
             </div>
           </motion.div>
         )
-        
       case 3:
         return (
           <motion.div
+            key="health-step"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             className="space-y-6"
           >
             <h2 className="text-2xl font-semibold text-gray-800">Health & Medical History</h2>
-            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="clinical-label">Current BMI *</label>
-                <input
-                  type="number"
-                  step="0.1"
-                  className="clinical-input"
-                  {...register('current_bmi', { required: true, min: 15, max: 50 })}
-                />
+                <input type="number" step="0.1" className="clinical-input" {...register('current_bmi', { required: true, min: 15, max: 50 })} />
               </div>
-              
               <div>
                 <label className="clinical-label">BMI at Age 20</label>
-                <input
-                  type="number"
-                  step="0.1"
-                  className="clinical-input"
-                  {...register('bmi_at_20', { min: 15, max: 50 })}
-                />
+                <input type="number" step="0.1" className="clinical-input" {...register('bmi_at_20', { min: 15, max: 50 })} />
               </div>
-              
               <div>
                 <label className="clinical-label">BMI at Age 50</label>
-                <input
-                  type="number"
-                  step="0.1"
-                  className="clinical-input"
-                  {...register('bmi_at_50', { min: 15, max: 50 })}
-                />
+                <input type="number" step="0.1" className="clinical-input" {...register('bmi_at_50', { min: 15, max: 50 })} />
               </div>
-              
               <div>
                 <label className="clinical-label">Pack Years of Smoking</label>
-                <input
-                  type="number"
-                  step="0.5"
-                  className="clinical-input"
-                  {...register('pack_years_smoking', { min: 0, max: 100 })}
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  Packs per day × years smoked
-                </p>
+                <input type="number" step="0.5" className="clinical-input" {...register('pack_years_smoking', { min: 0, max: 100 })} />
+                <p className="text-xs text-gray-500 mt-1">Packs per day × years smoked</p>
               </div>
             </div>
-            
-            {/* Medical History Section */}
             <div className="border-t pt-4 mt-2">
               <h3 className="text-lg font-medium text-gray-700 mb-3">Medical History</h3>
               <div className="space-y-2">
@@ -328,59 +259,26 @@ const RiskAssessment: React.FC = () => {
             </div>
           </motion.div>
         )
-        
       case 4:
         return result ? (
           <motion.div
+            key="results-step"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className="space-y-6"
           >
             <h2 className="text-2xl font-semibold text-gray-800">Risk Assessment Results</h2>
-            
-            {/* Risk Summary Card */}
-            <div className={`clinical-card border-2 ${
-              result.risk_assessment.risk_category === 'high' ? 'border-red-500 bg-red-50' :
-              result.risk_assessment.risk_category === 'moderate' ? 'border-orange-500 bg-orange-50' :
-              'border-green-500 bg-green-50'
-            }`}>
+            <div className={`clinical-card border-2 ${result.risk_assessment.risk_category === 'high' ? 'border-red-500 bg-red-50' : result.risk_assessment.risk_category === 'moderate' ? 'border-orange-500 bg-orange-50' : 'border-green-500 bg-green-50'}`}>
               <div className="text-center">
                 <p className="text-lg font-medium text-gray-700">5-Year Breast Cancer Risk</p>
-                <p className={`text-5xl font-bold mt-2 ${
-                  result.risk_assessment.risk_category === 'high' ? 'text-red-600' :
-                  result.risk_assessment.risk_category === 'moderate' ? 'text-orange-600' :
-                  'text-green-600'
-                }`}>
+                <p className={`text-5xl font-bold mt-2 ${result.risk_assessment.risk_category === 'high' ? 'text-red-600' : result.risk_assessment.risk_category === 'moderate' ? 'text-orange-600' : 'text-green-600'}`}>
                   {(result.risk_assessment.five_year_risk * 100).toFixed(1)}%
                 </p>
-                <p className="text-lg mt-2 font-medium capitalize">
-                  {result.risk_assessment.risk_category} Risk
-                </p>
-                <p className="text-sm text-gray-600 mt-2">
-                  95% CI: {(result.risk_assessment.confidence_interval.lower * 100).toFixed(1)}% - {(result.risk_assessment.confidence_interval.upper * 100).toFixed(1)}%
-                </p>
-                <p className="text-sm text-gray-500 mt-1">
-                  {result.risk_assessment.percentile}th percentile compared to similar women
-                </p>
-                {result.risk_assessment.relative_risk && (
-                  <div className="mt-4 pt-4 border-t border-gray-200">
-                    <p className="text-sm text-gray-700">
-                      <span className="font-semibold">Relative Risk:</span>{' '}
-                      <span className={`font-bold ${
-                        result.risk_assessment.relative_risk > 1.5 ? 'text-red-600' :
-                        result.risk_assessment.relative_risk > 1.0 ? 'text-orange-600' :
-                        'text-green-600'
-                      }`}>
-                        {result.risk_assessment.relative_risk.toFixed(2)}x
-                      </span>{' '}
-                      compared to average women of your age
-                    </p>
-                  </div>
-                )}
+                <p className="text-lg mt-2 font-medium capitalize">{result.risk_assessment.risk_category} Risk</p>
+                <p className="text-sm text-gray-600 mt-2">95% CI: {(result.risk_assessment.confidence_interval.lower * 100).toFixed(1)}% - {(result.risk_assessment.confidence_interval.upper * 100).toFixed(1)}%</p>
+                <p className="text-sm text-gray-500 mt-1">{result.risk_assessment.percentile}th percentile compared to similar women</p>
               </div>
             </div>
-            
-            {/* Risk Factors */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="clinical-card border-l-4 border-red-400">
                 <h4 className="font-semibold text-gray-700 mb-3">Risk Increasing Factors</h4>
@@ -396,7 +294,6 @@ const RiskAssessment: React.FC = () => {
                   ))}
                 </ul>
               </div>
-              
               <div className="clinical-card border-l-4 border-green-400">
                 <h4 className="font-semibold text-gray-700 mb-3">Risk Decreasing Factors</h4>
                 <ul className="space-y-3">
@@ -412,25 +309,17 @@ const RiskAssessment: React.FC = () => {
                 </ul>
               </div>
             </div>
-            
-            {/* Screening Recommendation */}
             <div className="clinical-card border-l-4 border-primary">
               <h4 className="font-semibold text-gray-800 mb-2">Screening Recommendation</h4>
               <p className="text-gray-700 capitalize">{result.recommendations.screening.recommendation.replace(/_/g, ' ')}</p>
               <p className="text-sm text-gray-600 mt-1">{result.recommendations.screening.rationale}</p>
               <div className="mt-3 flex items-center gap-4 text-sm">
-                <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                  Next: {result.recommendations.screening.next_screening_date}
-                </span>
+                <span className="bg-rose-100 text-rose-800 px-2 py-1 rounded">Next: {result.recommendations.screening.next_screening_date}</span>
                 {result.recommendations.screening.additional_imaging.ultrasound && (
-                  <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded">
-                    Ultrasound recommended
-                  </span>
+                  <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded">Ultrasound recommended</span>
                 )}
               </div>
             </div>
-            
-            {/* Lifestyle Modifications */}
             <div className="clinical-card">
               <h4 className="font-semibold text-gray-800 mb-3">Lifestyle Recommendations</h4>
               <div className="space-y-3">
@@ -441,40 +330,32 @@ const RiskAssessment: React.FC = () => {
                       <p className="text-xs text-gray-500 capitalize">{mod.category.replace(/_/g, ' ')}</p>
                     </div>
                     <div className="text-right">
-                      <span className={`text-xs px-2 py-1 rounded ${
-                        mod.priority === 'high' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'
-                      }`}>
-                        {mod.priority} priority
-                      </span>
+                      <span className={`text-xs px-2 py-1 rounded ${mod.priority === 'high' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'}`}>{mod.priority} priority</span>
                       <p className="text-sm text-green-600 mt-1">↓ {mod.potential_risk_reduction}</p>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-            
-            {/* Medical Interventions */}
             <div className="clinical-card">
               <h4 className="font-semibold text-gray-800 mb-3">Medical Interventions</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className={`p-4 rounded-lg ${result.recommendations.medical_interventions.genetic_counseling.recommended ? 'bg-blue-50 border border-blue-200' : 'bg-gray-50'}`}>
+                <div className={`p-4 rounded-lg ${result.recommendations.medical_interventions.genetic_counseling.recommended ? 'bg-rose-50 border border-rose-200' : 'bg-gray-50'}`}>
                   <p className="font-medium">Genetic Counseling</p>
-                  <p className={`text-sm ${result.recommendations.medical_interventions.genetic_counseling.recommended ? 'text-blue-700' : 'text-gray-600'}`}>
+                  <p className={`text-sm ${result.recommendations.medical_interventions.genetic_counseling.recommended ? 'text-rose-700' : 'text-gray-600'}`}>
                     {result.recommendations.medical_interventions.genetic_counseling.recommended ? '✓ Recommended' : 'Not recommended'}
                   </p>
                   <p className="text-xs text-gray-500 mt-1">{result.recommendations.medical_interventions.genetic_counseling.reason}</p>
                 </div>
-                <div className={`p-4 rounded-lg ${result.recommendations.medical_interventions.chemoprevention.recommended ? 'bg-blue-50 border border-blue-200' : 'bg-gray-50'}`}>
+                <div className={`p-4 rounded-lg ${result.recommendations.medical_interventions.chemoprevention.recommended ? 'bg-rose-50 border border-rose-200' : 'bg-gray-50'}`}>
                   <p className="font-medium">Chemoprevention</p>
-                  <p className={`text-sm ${result.recommendations.medical_interventions.chemoprevention.recommended ? 'text-blue-700' : 'text-gray-600'}`}>
+                  <p className={`text-sm ${result.recommendations.medical_interventions.chemoprevention.recommended ? 'text-rose-700' : 'text-gray-600'}`}>
                     {result.recommendations.medical_interventions.chemoprevention.recommended ? '✓ Recommended' : 'Not recommended'}
                   </p>
                   <p className="text-xs text-gray-500 mt-1">{result.recommendations.medical_interventions.chemoprevention.reason}</p>
                 </div>
               </div>
             </div>
-            
-            {/* Report Info */}
             <div className="clinical-card bg-gray-50">
               <div className="flex items-center justify-between">
                 <div>
@@ -483,26 +364,10 @@ const RiskAssessment: React.FC = () => {
                 </div>
               </div>
             </div>
-            
-            {/* Action Buttons */}
             <div className="flex flex-wrap gap-4">
-              <button className="btn-primary">
-                <span className="mr-2">📄</span>
-                Download Report (PDF)
-              </button>
-              <button className="btn-secondary">
-                <span className="mr-2">📧</span>
-                Email Results
-              </button>
-              <button
-                onClick={() => {
-                  setCurrentStep(1)
-                  setResult(null)
-                }}
-                className="btn-secondary"
-              >
-                New Assessment
-              </button>
+              <button className="btn-primary"><span className="mr-2">📄</span>Download Report (PDF)</button>
+              <button className="btn-secondary"><span className="mr-2">📧</span>Email Results</button>
+              <button onClick={() => { reset(); setCurrentStep(1); setResult(null); }} className="btn-secondary">New Assessment</button>
             </div>
           </motion.div>
         ) : null
@@ -513,68 +378,31 @@ const RiskAssessment: React.FC = () => {
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900">Breast Cancer Risk Assessment</h1>
-        <p className="text-gray-600 mt-2">
-          Complete patient information for personalized risk evaluation
-        </p>
+        <p className="text-gray-600 mt-2">Complete patient information for personalized risk evaluation</p>
       </div>
-      
-      {/* Progress Bar */}
       {currentStep <= totalSteps && (
         <div className="mb-8">
           <div className="flex justify-between mb-2">
-            <span className="text-sm text-gray-600">
-              Step {currentStep} of {totalSteps}
-            </span>
-            <span className="text-sm text-gray-600">
-              {Math.round((currentStep / totalSteps) * 100)}% Complete
-            </span>
+            <span className="text-sm text-gray-600">Step {currentStep} of {totalSteps}</span>
+            <span className="text-sm text-gray-600">{Math.round((currentStep / totalSteps) * 100)}% Complete</span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
-            <motion.div
-              className="bg-primary h-2 rounded-full"
-              initial={{ width: 0 }}
-              animate={{ width: `${(currentStep / totalSteps) * 100}%` }}
-              transition={{ duration: 0.3 }}
-            />
+            <motion.div className="bg-primary h-2 rounded-full" initial={{ width: 0 }} animate={{ width: `${(currentStep / totalSteps) * 100}%` }} transition={{ duration: 0.3 }} />
           </div>
         </div>
       )}
-      
-      {/* Form Content */}
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="clinical-card">
           <AnimatePresence mode="wait">
             {renderStep()}
           </AnimatePresence>
-          
-          {/* Navigation Buttons */}
           {currentStep <= totalSteps && (
             <div className="flex justify-between mt-8">
-              <button
-                type="button"
-                onClick={prevStep}
-                disabled={currentStep === 1}
-                className={`btn-secondary ${currentStep === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
-              >
-                Previous
-              </button>
-              
+              <button type="button" onClick={prevStep} disabled={currentStep === 1} className={`btn-secondary ${currentStep === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}>Previous</button>
               {currentStep < totalSteps ? (
-                <button
-                  type="button"
-                  onClick={nextStep}
-                  className="btn-primary"
-                >
-                  Next
-                </button>
+                <button type="button" onClick={nextStep} className="btn-primary">Next</button>
               ) : (
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="btn-primary"
-                >
-                  {isLoading ? 'Calculating...' : 'Calculate Risk'}
-                </button>
+                <button type="submit" disabled={isLoading} className="btn-primary">{isLoading ? 'Calculating...' : 'Calculate Risk'}</button>
               )}
             </div>
           )}

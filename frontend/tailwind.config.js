@@ -8,16 +8,16 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#0B5394',
-          light: '#1976D2',
-          dark: '#073763',
+          DEFAULT: '#6D2842',
+          light: '#8B4A5E',
+          dark: '#4A1A2C',
         },
         secondary: {
-          DEFAULT: '#00897B',
-          light: '#4DB6AC',
-          dark: '#00695C',
+          DEFAULT: '#9C6B7C',
+          light: '#C4A4AF',
+          dark: '#7A4D5C',
         },
-        accent: '#7B1FA2',
+        accent: '#D4AF37',
         success: '#2E7D32',
         warning: '#F57C00',
         danger: '#C62828',

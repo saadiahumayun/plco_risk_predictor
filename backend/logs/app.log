@@ -734,3 +734,16 @@
 {"timestamp": "2026-01-09T03:54:50.753876+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Incoming GET request to /api/v1/docs"}
 {"timestamp": "2026-01-09T03:54:50.755618+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Completed GET /api/v1/docs with status 200 in 1.91ms"}
 {"timestamp": "2026-01-12T04:59:27.986047+00:00", "level": null, "name": "app.main", "funcName": "lifespan", "message": "Shutting down application..."}
+{"timestamp": "2026-01-23T18:57:24.580745+00:00", "level": null, "name": "app.core.logging", "funcName": "setup_logging", "message": "Logging configured - Level: INFO, Format: json, Environment: development"}
+{"timestamp": "2026-01-23T18:57:24.586081+00:00", "level": null, "name": "app.main", "funcName": "lifespan", "message": "Starting up breast cancer risk prediction API..."}
+{"timestamp": "2026-01-23T18:57:24.586171+00:00", "level": null, "name": "app.db.session", "funcName": "init_db", "message": "Creating database tables..."}
+{"timestamp": "2026-01-23T18:57:31.016983+00:00", "level": null, "name": "app.db.session", "funcName": "init_db", "message": "Database tables created successfully"}
+{"timestamp": "2026-01-23T18:57:31.017659+00:00", "level": null, "name": "app.main", "funcName": "lifespan", "message": "Loading ML models from MLflow..."}
+{"timestamp": "2026-01-23T18:57:31.017850+00:00", "level": null, "name": "app.main", "funcName": "lifespan", "message": "Application startup complete"}
+{"timestamp": "2026-01-23T19:20:58.246877+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Incoming POST request to /api/v1/predict"}
+{"timestamp": "2026-01-23T19:20:58.265698+00:00", "level": null, "name": "app.services.ml_service", "funcName": "_predict_with_ga_model", "message": "Could not scale features: This MinMaxScaler instance is not fitted yet. Call 'fit' with appropriate arguments before using this estimator."}
+{"timestamp": "2026-01-23T19:20:58.290758+00:00", "level": null, "name": "app.services.ml_service", "funcName": "_predict_with_baseline_model", "message": "Could not scale baseline features: This MinMaxScaler instance is not fitted yet. Call 'fit' with appropriate arguments before using this estimator."}
+{"timestamp": "2026-01-23T19:20:58.307563+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Completed POST /api/v1/predict with status 200 in 60.99ms"}
+{"timestamp": "2026-01-23T19:20:58.308395+00:00", "level": null, "name": "app.api.routes", "funcName": "save_prediction_to_db", "message": "Attempting to save prediction. Environment: development"}
+{"timestamp": "2026-01-23T19:20:58.308633+00:00", "level": null, "name": "app.api.routes", "funcName": "save_prediction_to_db", "message": "Database session created for prediction 1769178058.26151_0"}
+{"timestamp": "2026-01-23T19:21:05.043546+00:00", "level": null, "name": "app.api.routes", "funcName": "save_prediction_to_db", "message": "Saved prediction 1769178058.26151_0 for patient PAT-1769196058215 to database"}

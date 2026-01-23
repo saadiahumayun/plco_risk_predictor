@@ -4,16 +4,16 @@
 
 /* Clinical Design System */
 :root {
-  /* Colors - Professional medical palette */
-  --primary: #0B5394;        /* Deep Medical Blue */
-  --primary-light: #1976D2;  
-  --primary-dark: #073763;
+  /* Colors - IBA Professional palette */
+  --primary: #6D2842;        /* IBA Maroon */
+  --primary-light: #8B4A5E;  
+  --primary-dark: #4A1A2C;
   
-  --secondary: #00897B;      /* Medical Teal */
-  --secondary-light: #4DB6AC;
-  --secondary-dark: #00695C;
+  --secondary: #9C6B7C;      /* Muted Rose */
+  --secondary-light: #C4A4AF;
+  --secondary-dark: #7A4D5C;
   
-  --accent: #7B1FA2;         /* Clinical Purple */
+  --accent: #D4AF37;         /* Gold Accent */
   --success: #2E7D32;        /* Medical Green */
   --warning: #F57C00;        /* Alert Orange */
   --danger: #C62828;         /* Critical Red */
