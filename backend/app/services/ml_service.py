@@ -23,7 +23,9 @@ from app.models.schemas import (
     RiskCategory,
     FeatureImportance,
     ModelComparison,
-    ModelPrediction
+    ModelPrediction,
+    ClinicalRecommendation,
+    ScreeningRecommendation
 )
 from app.services.preprocessing import PreprocessingService
 from app.utils.metrics import calculate_confidence_interval
@@ -260,6 +262,10 @@ class MLService:
                 recommended_model="ga_model" if abs(ga_prediction - baseline_prediction) < 0.05 else "review_needed"
             )
             
+            # Generate recommendations based on risk category
+            recommendations = self._generate_recommendations(risk_category, features_dict)
+            screening = self._generate_screening_recommendation(risk_category, features_dict)
+            
             # Create response
             latency_ms = (time.time() - start_time) * 1000
             
@@ -272,6 +278,8 @@ class MLService:
                 relative_risk=relative_risk,
                 feature_importance=feature_importance,
                 model_comparison=model_comparison,
+                recommendations=recommendations,
+                screening=screening,
                 model_version=self.ga_model_version,
                 processing_time_ms=latency_ms
             )
@@ -523,10 +531,10 @@ class MLService:
                 feature='benign_breast_disease', importance=0.05, value=0.0,
                 contribution=-0.01, description='No history of benign breast disease'
             ))
-        
-        # Sort by absolute contribution
-        feature_importance_list.sort(key=lambda x: abs(x.contribution), reverse=True)
-        
+                
+                # Sort by absolute contribution
+                feature_importance_list.sort(key=lambda x: abs(x.contribution), reverse=True)
+                
         return feature_importance_list[:8]  # Top 8 factors
     
     def _calculate_risk_percentile(self, risk_score: float) -> int:
@@ -628,6 +636,111 @@ class MLService:
                 # Continue with other predictions
         
         return responses
+    
+    def _generate_recommendations(self, risk_category: RiskCategory, features: Dict[str, Any]) -> List[ClinicalRecommendation]:
+        """Generate clinical recommendations based on risk category and features."""
+        recommendations = []
+        
+        # Check family history for genetic counseling
+        fh_cancer = features.get('fh_cancer', 0)
+        
+        if risk_category == RiskCategory.HIGH:
+            # High risk recommendations
+            recommendations.append(ClinicalRecommendation(
+                type="screening",
+                priority="high",
+                action="Enhanced screening with annual mammography and consider breast MRI",
+                rationale="High risk category warrants more intensive surveillance"
+            ))
+            recommendations.append(ClinicalRecommendation(
+                type="medical",
+                priority="high",
+                action="Discuss chemoprevention options (tamoxifen/raloxifene)",
+                rationale=f"5-year risk exceeds {settings.HIGH_RISK_THRESHOLD*100:.1f}% threshold for chemoprevention"
+            ))
+            if fh_cancer > 0:
+                recommendations.append(ClinicalRecommendation(
+                    type="genetic",
+                    priority="high",
+                    action="Genetic counseling and BRCA testing recommended",
+                    rationale="Family history combined with high risk score"
+                ))
+        elif risk_category == RiskCategory.MODERATE:
+            # Moderate risk recommendations
+            recommendations.append(ClinicalRecommendation(
+                type="screening",
+                priority="medium",
+                action="Annual mammography recommended",
+                rationale="Moderate risk warrants regular surveillance"
+            ))
+            if fh_cancer > 0:
+                recommendations.append(ClinicalRecommendation(
+                    type="genetic",
+                    priority="medium",
+                    action="Consider genetic counseling",
+                    rationale="Family history present"
+                ))
+            recommendations.append(ClinicalRecommendation(
+                type="lifestyle",
+                priority="medium",
+                action="Lifestyle modifications to reduce risk",
+                rationale="Weight management, physical activity, and limiting alcohol"
+            ))
+        else:
+            # Low risk recommendations
+            recommendations.append(ClinicalRecommendation(
+                type="screening",
+                priority="low",
+                action="Standard screening per age-appropriate guidelines",
+                rationale="Low risk - follow standard screening protocols"
+            ))
+            recommendations.append(ClinicalRecommendation(
+                type="lifestyle",
+                priority="low",
+                action="Maintain healthy lifestyle",
+                rationale="Continue healthy habits for risk maintenance"
+            ))
+        
+        return recommendations
+    
+    def _generate_screening_recommendation(self, risk_category: RiskCategory, features: Dict[str, Any]) -> ScreeningRecommendation:
+        """Generate screening recommendations based on risk category."""
+        from datetime import datetime, timedelta
+        
+        age = features.get('age', 50)
+        fh_cancer = features.get('fh_cancer', 0)
+        bbd = features.get('bbd', 0)
+        
+        if risk_category == RiskCategory.HIGH:
+            additional = ["MRI", "Ultrasound"]
+            return ScreeningRecommendation(
+                recommendation="Enhanced Screening Protocol",
+                frequency="Every 6 months",
+                rationale="High risk category requires more intensive surveillance including breast MRI",
+                next_date=datetime.utcnow() + timedelta(days=180),
+                additional_imaging=additional
+            )
+        elif risk_category == RiskCategory.MODERATE:
+            additional = []
+            if fh_cancer > 1:
+                additional.append("MRI")
+            if bbd > 0 or age < 50:
+                additional.append("Ultrasound")
+            return ScreeningRecommendation(
+                recommendation="Annual Mammography",
+                frequency="Annually",
+                rationale="Moderate risk warrants annual screening mammography",
+                next_date=datetime.utcnow() + timedelta(days=365),
+                additional_imaging=additional if additional else None
+            )
+        else:
+            return ScreeningRecommendation(
+                recommendation="Standard Screening Guidelines",
+                frequency="Every 1-2 years per guidelines",
+                rationale="Low risk - follow age-appropriate screening guidelines",
+                next_date=datetime.utcnow() + timedelta(days=365 if age >= 50 else 730),
+                additional_imaging=None
+            )
 
 
 # Create singleton instance

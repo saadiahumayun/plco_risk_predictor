@@ -6,6 +6,7 @@ from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks, Query
 from typing import List, Dict, Any, Optional
 from datetime import datetime, timedelta
 import logging
+import uuid
 from sqlalchemy.orm import Session
 
 from app.models.schemas import (
@@ -42,6 +43,8 @@ def save_prediction_to_db(
     user_id: Optional[str] = None
 ):
     """Save a prediction to the database."""
+    logger.info(f"Attempting to save prediction. Environment: {settings.ENVIRONMENT}")
+    
     # Skip database save in demo mode
     if settings.ENVIRONMENT in ("demo", "test"):
         logger.info(f"Demo mode: Skipping database save for prediction {response_data.get('prediction_id')}")
@@ -50,12 +53,16 @@ def save_prediction_to_db(
     from app.db.session import SessionLocal
     
     db = SessionLocal()
+    logger.info(f"Database session created for prediction {response_data.get('prediction_id')}")
     try:
         # Extract patient_id (MR number) from request
         patient_id = request_data.get("patient_id") or request_data.get("mr_number")
         
         # Use demo user ID if no user is authenticated
         effective_user_id = user_id or DEMO_USER_ID
+        # Convert string UUID to UUID object for SQLAlchemy
+        if isinstance(effective_user_id, str):
+            effective_user_id = uuid.UUID(effective_user_id)
         
         prediction = Prediction(
             prediction_id=response_data["prediction_id"],

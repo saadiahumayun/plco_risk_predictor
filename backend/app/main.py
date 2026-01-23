@@ -163,6 +163,37 @@ async def health_check():
     return {"status": "healthy"}
 
 
+# Database health check endpoint
+@app.get("/health/db")
+async def database_health_check():
+    """Check database connection."""
+    from app.db.session import engine
+    from sqlalchemy import text
+    import os
+    
+    try:
+        with engine.connect() as conn:
+            result = conn.execute(text("SELECT 1"))
+            result.fetchone()
+        
+        # Get database URL (masked)
+        db_url = os.environ.get("DATABASE_URL", settings.DATABASE_URL)
+        masked_url = db_url[:20] + "..." if len(db_url) > 20 else db_url
+        
+        return {
+            "status": "connected",
+            "database": "postgresql" if "postgresql" in db_url else "sqlite",
+            "url_preview": masked_url,
+            "environment": settings.ENVIRONMENT
+        }
+    except Exception as e:
+        return {
+            "status": "disconnected",
+            "error": str(e),
+            "environment": settings.ENVIRONMENT
+        }
+
+
 if __name__ == "__main__":
     import uvicorn
     
