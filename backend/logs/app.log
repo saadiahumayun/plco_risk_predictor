@@ -6939,3 +6939,13 @@
 {"timestamp": "2026-01-29T11:23:06.793104+00:00", "level": null, "name": "app.api.routes", "funcName": "save_prediction_to_db", "message": "Saved prediction 1769667763.525868_803 for patient SYNTH-0194 to database"}
 {"timestamp": "2026-01-29T11:23:07.045740+00:00", "level": null, "name": "app.api.routes", "funcName": "save_prediction_to_db", "message": "Saved prediction 1769667763.561847_804 for patient SYNTH-0195 to database"}
 {"timestamp": "2026-01-29T11:23:07.057446+00:00", "level": null, "name": "app.api.routes", "funcName": "save_prediction_to_db", "message": "Saved prediction 1769667763.596155_805 for patient SYNTH-0196 to database"}
+{"timestamp": "2026-01-30T10:46:56.338394+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Incoming GET request to /api/v1/predictions"}
+{"timestamp": "2026-01-30T10:47:00.077058+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Completed GET /api/v1/predictions with status 200 in 3741.23ms"}
+{"timestamp": "2026-01-30T10:47:34.623455+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Incoming GET request to /api/v1/predictions"}
+{"timestamp": "2026-01-30T10:47:37.557316+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Completed GET /api/v1/predictions with status 200 in 2933.84ms"}
+{"timestamp": "2026-01-30T10:48:16.963460+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Incoming GET request to /api/v1/predictions"}
+{"timestamp": "2026-01-30T10:48:19.177405+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Completed GET /api/v1/predictions with status 200 in 2213.95ms"}
+{"timestamp": "2026-01-30T10:48:19.277111+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Incoming GET request to /api/v1/predictions"}
+{"timestamp": "2026-01-30T10:48:21.290075+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Completed GET /api/v1/predictions with status 200 in 2012.96ms"}
+{"timestamp": "2026-01-30T10:48:36.025146+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Incoming GET request to /api/v1/predictions"}
+{"timestamp": "2026-01-30T10:48:38.116910+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Completed GET /api/v1/predictions with status 200 in 2091.74ms"}

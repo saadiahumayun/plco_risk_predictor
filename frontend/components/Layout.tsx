@@ -52,7 +52,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { path: '/dashboard', label: 'Dashboard', icon: Icons.dashboard },
     { path: '/assessment', label: 'Risk Assessment', icon: Icons.assessment },
     { path: '/history', label: 'Patient History', icon: Icons.history },
-    { path: '/analytics', label: 'Analytics', icon: Icons.analytics },
     { path: '/validation', label: 'Validation', icon: Icons.validation },
     { path: '/impact', label: 'Impact', icon: Icons.impact },
     { path: '/about', label: 'About', icon: Icons.about },

@@ -229,5 +229,78 @@ export async function getHealthStatus() {
   return response.data
 }
 
+// Prediction history interface
+export interface PredictionRecord {
+  prediction_id: string
+  patient_id?: string
+  risk_score: number
+  risk_category: 'low' | 'moderate' | 'high'
+  percentile?: number
+  confidence_interval?: { lower: number; upper: number }
+  model_version?: string
+  processing_time_ms?: number
+  created_at: string
+  input_features?: any
+}
+
+export interface PredictionsResponse {
+  predictions: PredictionRecord[]
+  total: number
+  skip: number
+  limit: number
+}
+
+// Get prediction history
+export async function getPredictions(skip = 0, limit = 20): Promise<PredictionsResponse> {
+  const response = await api.get<PredictionsResponse>('/predictions', {
+    params: { skip, limit }
+  })
+  return response.data
+}
+
+// Get a single prediction by ID
+export async function getPrediction(predictionId: string): Promise<PredictionRecord> {
+  const response = await api.get<PredictionRecord>(`/predictions/${predictionId}`)
+  return response.data
+}
+
+// Dashboard stats interface
+export interface DashboardStats {
+  totalAssessments: number
+  highRiskCount: number
+  moderateRiskCount: number
+  lowRiskCount: number
+  averageRisk: number
+  recentPredictions: PredictionRecord[]
+}
+
+// Get dashboard statistics (aggregated from predictions)
+export async function getDashboardStats(): Promise<DashboardStats> {
+  // Fetch all predictions to calculate stats
+  const response = await api.get<PredictionsResponse>('/predictions', {
+    params: { skip: 0, limit: 100 }
+  })
+  
+  const predictions = response.data.predictions
+  const total = response.data.total
+  
+  const highRiskCount = predictions.filter(p => p.risk_category === 'high').length
+  const moderateRiskCount = predictions.filter(p => p.risk_category === 'moderate').length
+  const lowRiskCount = predictions.filter(p => p.risk_category === 'low').length
+  
+  const averageRisk = predictions.length > 0 
+    ? predictions.reduce((sum, p) => sum + p.risk_score, 0) / predictions.length 
+    : 0
+  
+  return {
+    totalAssessments: total,
+    highRiskCount,
+    moderateRiskCount,
+    lowRiskCount,
+    averageRisk,
+    recentPredictions: predictions.slice(0, 5)
+  }
+}
+
 export default api
 
