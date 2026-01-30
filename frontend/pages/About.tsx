@@ -28,8 +28,7 @@ const About: React.FC = () => {
         <p className="text-gray-700 leading-relaxed mb-4">
           This breast cancer risk prediction system represents a significant advancement in personalized 
           risk assessment. By leveraging genetic algorithm (GA) optimization for feature selection, 
-          our model achieves superior predictive performance while using 32% fewer clinical variables 
-          than traditional models.
+          our model achieves superior predictive performance while using only personal health history.
         </p>
         <p className="text-gray-700 leading-relaxed">
           The system is designed specifically for clinical settings, providing healthcare professionals 
@@ -48,7 +47,7 @@ const About: React.FC = () => {
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">Key Features</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <h3 className="font-semibold text-gray-700 mb-2">🧬 GA-Optimized Selection</h3>
+            <h3 className="font-semibold text-gray-700 mb-2">🧬 Genetic Algorithm-Optimized Selection</h3>
             <p className="text-gray-600 text-sm">
               Genetic algorithms identify the most predictive features from over 90 clinical variables, 
               reducing complexity while maintaining accuracy.
@@ -57,7 +56,7 @@ const About: React.FC = () => {
           <div>
             <h3 className="font-semibold text-gray-700 mb-2">📊 Superior Performance</h3>
             <p className="text-gray-600 text-sm">
-              Achieves an AUC of 0.892, outperforming traditional models while using fewer inputs 
+              Achieves an AUC of 0.775, outperforming traditional models while using fewer inputs 
               for more efficient clinical assessment.
             </p>
           </div>

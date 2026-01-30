@@ -6,6 +6,7 @@ import RiskAssessment from './pages/RiskAssessment'
 import PatientHistory from './pages/PatientHistory'
 import Analytics from './pages/Analytics'
 import About from './pages/About'
+import ModelValidation from './pages/ModelValidation'
 
 const App: React.FC = () => {
   return (
@@ -17,6 +18,7 @@ const App: React.FC = () => {
           <Route path="/assessment" element={<RiskAssessment />} />
           <Route path="/history" element={<PatientHistory />} />
           <Route path="/analytics" element={<Analytics />} />
+          <Route path="/validation" element={<ModelValidation />} />
           <Route path="/about" element={<About />} />
         </Routes>
       </Layout>
