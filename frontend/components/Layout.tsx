@@ -15,6 +15,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { path: '/history', label: 'Patient History', icon: '📋' },
     { path: '/analytics', label: 'Analytics', icon: '📈' },
     { path: '/validation', label: 'Model Validation', icon: '🧪' },
+    { path: '/impact', label: 'Impact', icon: '💡' },
     { path: '/about', label: 'About', icon: 'ℹ️' },
   ]
   
@@ -26,14 +27,17 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <div className="flex justify-between items-center h-16">
             {/* Logo and Title */}
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-dark rounded-lg flex items-center justify-center text-white font-bold">
-                BC
-              </div>
+              {/* CANDetect Logo */}
+              <img 
+                src="/CANDetect.png" 
+                alt="CANDetect Logo" 
+                className="w-12 h-12 object-contain"
+              />
               <div>
                 <h1 className="text-xl font-semibold text-gray-900">
-                  Breast Cancer Risk Predictor
+                  CANDetect
                 </h1>
-                <p className="text-xs text-gray-500">Clinical Decision Support System</p>
+                <p className="text-xs text-gray-500">AI-Powered Breast Cancer Risk Assessment</p>
               </div>
             </div>
             
@@ -57,7 +61,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             
             {/* User Info */}
             <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">Dr. Munira Moosajee</span>
+              <span className="text-sm text-gray-600">Profile</span>
               <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
             </div>
           </div>
@@ -83,7 +87,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <footer className="bg-white border-t border-gray-200 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center text-sm text-gray-500">
-            <p>© 2026 Breast Cancer Risk Predictor. All rights reserved by Institute of Business Administration, Karachi.</p>
+            <p>© 2026 CANDetect. All rights reserved by Institute of Business Administration, Karachi.</p>
             <div className="flex space-x-4">
               <a href="#" className="hover:text-primary">Privacy Policy</a>
               <a href="#" className="hover:text-primary">Terms of Use</a>

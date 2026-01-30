@@ -50,7 +50,7 @@ const Impact: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         className="mb-8"
       >
-        <h1 className="text-3xl font-bold text-gray-900">Impact Analysis</h1>
+        <h1 className="text-3xl font-bold text-gray-900">CANDetect Impact Analysis</h1>
         <p className="text-gray-600 mt-2">
           AI-Enabled Early Breast Cancer Detection: Financial Impact for Pakistani Healthcare
         </p>

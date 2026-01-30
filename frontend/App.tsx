@@ -7,18 +7,20 @@ import PatientHistory from './pages/PatientHistory'
 import Analytics from './pages/Analytics'
 import About from './pages/About'
 import ModelValidation from './pages/ModelValidation'
+import Impact from './pages/Impact'
 
 const App: React.FC = () => {
   return (
     <Router>
       <Layout>
         <Routes>
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/" element={<Navigate to="/impact" replace />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/assessment" element={<RiskAssessment />} />
           <Route path="/history" element={<PatientHistory />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/validation" element={<ModelValidation />} />
+          <Route path="/impact" element={<Impact />} />
           <Route path="/about" element={<About />} />
         </Routes>
       </Layout>
