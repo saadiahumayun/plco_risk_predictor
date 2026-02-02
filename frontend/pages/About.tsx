@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 // SVG Icons
 const DnaIcon = () => (
@@ -224,7 +224,7 @@ const About = () => {
               key={idx}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ 
-                opacity: showGAAnimation ? (gaGeneration >= (idx * 8) ? 1 : 0.3) : 1,
+                opacity: showGAAnimation ? (gaGeneration >= (idx * 8) ? 1 : 0.8) : 1,
                 scale: showGAAnimation ? (gaGeneration >= (idx * 8) ? 1 : 0.9) : 1
               }}
               className={`text-center p-4 rounded-lg border-2 transition-all ${
@@ -343,7 +343,7 @@ const About = () => {
               transition={{ delay: 0.5 + idx * 0.1 }}
               className={`text-center p-6 rounded-lg bg-${metric.color}-50 border-2 border-${metric.color}-200 hover:shadow-lg transition-shadow cursor-pointer`}
             >
-              <div className="text-3xl mb-2">{metric.icon}</div>
+              
               <div className={`text-4xl font-bold text-${metric.color}-600 mb-2`}>{metric.value}</div>
               <div className="font-semibold text-gray-800 mb-1">{metric.label}</div>
               <div className="text-xs text-gray-600">{metric.description}</div>

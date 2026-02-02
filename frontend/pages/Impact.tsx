@@ -5,10 +5,10 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 const Impact: React.FC = () => {
   // Key statistics
   const healthcareContext = [
-    { label: 'Breast Cancer Incidence', value: 'Highest in South Asia', icon: '📊' },
+    { label: 'Breast Cancer Incidence', value: 'Highest in South Asia', icon: '📈' },
     { label: 'Late-stage Detection', value: '90% of cases', icon: '⚠️' },
-    { label: '5-year Survival Rate', value: '30-40%', comparison: 'vs 85%+ in developed countries', icon: '💔' },
-    { label: 'Cost Differential', value: '3-4x higher', subtext: 'for late-stage treatment', icon: '💰' },
+    { label: '5-year Survival Rate', value: '30-40%', comparison: 'vs 85%+ in developed countries', icon: '♡' },
+    { label: 'Cost Differential', value: '3-4x higher', subtext: 'for late-stage treatment', icon: '💵' },
   ]
 
   const treatmentCosts = [

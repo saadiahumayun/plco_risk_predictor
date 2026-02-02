@@ -8367,3 +8367,15 @@
 {"timestamp": "2026-02-02T18:30:30.201067+00:00", "level": null, "name": "app.api.routes", "funcName": "save_prediction_to_db", "message": "Saved prediction 1770039023.496979_1005 for patient SYNTH-0196 to database"}
 {"timestamp": "2026-02-02T18:30:30.243067+00:00", "level": null, "name": "app.api.routes", "funcName": "save_prediction_to_db", "message": "Saved prediction 1770039023.564261_1007 for patient SYNTH-0198 to database"}
 {"timestamp": "2026-02-02T18:30:30.243145+00:00", "level": null, "name": "app.api.routes", "funcName": "save_prediction_to_db", "message": "Saved prediction 1770039023.599512_1008 for patient SYNTH-0199 to database"}
+{"timestamp": "2026-02-02T18:42:46.422966+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Incoming GET request to /api/v1/predictions"}
+{"timestamp": "2026-02-02T18:42:50.041951+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Completed GET /api/v1/predictions with status 200 in 3619.10ms"}
+{"timestamp": "2026-02-02T18:43:03.170095+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Incoming GET request to /api/v1/predictions"}
+{"timestamp": "2026-02-02T18:43:05.768778+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Completed GET /api/v1/predictions with status 200 in 2598.68ms"}
+{"timestamp": "2026-02-02T18:43:56.890876+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Incoming POST request to /api/v1/predict"}
+{"timestamp": "2026-02-02T18:43:56.893514+00:00", "level": null, "name": "app.services.ml_service", "funcName": "_predict_with_ga_model", "message": "Could not scale features: This MinMaxScaler instance is not fitted yet. Call 'fit' with appropriate arguments before using this estimator."}
+{"timestamp": "2026-02-02T18:43:56.909437+00:00", "level": null, "name": "app.services.ml_service", "funcName": "_predict_with_baseline_model", "message": "Could not scale baseline features: This MinMaxScaler instance is not fitted yet. Call 'fit' with appropriate arguments before using this estimator."}
+{"timestamp": "2026-02-02T18:43:56.924459+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Completed POST /api/v1/predict with status 200 in 33.58ms"}
+{"timestamp": "2026-02-02T18:43:56.924912+00:00", "level": null, "name": "app.api.routes", "funcName": "save_prediction_to_db", "message": "Attempting to save prediction. Environment: development"}
+{"timestamp": "2026-02-02T18:43:56.924996+00:00", "level": null, "name": "app.api.routes", "funcName": "save_prediction_to_db", "message": "Database session created for prediction 1770039836.891877_1009"}
+{"timestamp": "2026-02-02T18:43:58.774271+00:00", "level": null, "name": "app.api.routes", "funcName": "save_prediction_to_db", "message": "Saved prediction 1770039836.891877_1009 for patient PAT-1770057836887 to database"}
+{"timestamp": "2026-02-02T19:00:39.075491+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Incoming GET request to /api/v1/predictions"}
