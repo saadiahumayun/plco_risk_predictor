@@ -8379,3 +8379,6 @@
 {"timestamp": "2026-02-02T18:43:56.924996+00:00", "level": null, "name": "app.api.routes", "funcName": "save_prediction_to_db", "message": "Database session created for prediction 1770039836.891877_1009"}
 {"timestamp": "2026-02-02T18:43:58.774271+00:00", "level": null, "name": "app.api.routes", "funcName": "save_prediction_to_db", "message": "Saved prediction 1770039836.891877_1009 for patient PAT-1770057836887 to database"}
 {"timestamp": "2026-02-02T19:00:39.075491+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Incoming GET request to /api/v1/predictions"}
+{"timestamp": "2026-02-02T19:01:17.101190+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Completed GET /api/v1/predictions with status 200 in 38026.88ms"}
+{"timestamp": "2026-02-02T19:03:35.391179+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Incoming GET request to /api/v1/predictions"}
+{"timestamp": "2026-02-02T19:03:38.365149+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Completed GET /api/v1/predictions with status 200 in 2974.08ms"}

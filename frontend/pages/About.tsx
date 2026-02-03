@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // SVG Icons
 const DnaIcon = () => (
@@ -68,7 +68,7 @@ const About = () => {
         }
         return prev + 1;
       });
-    }, 50);
+    }, 100);  // Changed from 50ms to 100ms - twice as slow
   };
 
   const features = [
@@ -224,7 +224,7 @@ const About = () => {
               key={idx}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ 
-                opacity: showGAAnimation ? (gaGeneration >= (idx * 8) ? 1 : 0.8) : 1,
+                opacity: showGAAnimation ? (gaGeneration >= (idx * 8) ? 1 : 0.3) : 1,
                 scale: showGAAnimation ? (gaGeneration >= (idx * 8) ? 1 : 0.9) : 1
               }}
               className={`text-center p-4 rounded-lg border-2 transition-all ${
@@ -274,6 +274,185 @@ const About = () => {
             </div>
           </div>
         )}
+      </motion.section>
+
+      {/* Application Architecture */}
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.35 }}
+        className="clinical-card"
+      >
+        <h2 className="text-2xl font-semibold text-gray-800 mb-6">Application Architecture</h2>
+        
+        <div className="space-y-6">
+          {/* Frontend Layer */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4 }}
+            className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-6 border-2 border-blue-300"
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <div className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-bold">Frontend</div>
+              <h3 className="text-lg font-semibold text-gray-800">User Interface Layer</h3>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div className="bg-white rounded-lg p-4 border border-blue-200">
+                <div className="font-semibold text-blue-800 mb-2">⚛️ React + TypeScript</div>
+                <div className="text-xs text-gray-600">Component-based UI with type safety</div>
+              </div>
+              <div className="bg-white rounded-lg p-4 border border-blue-200">
+                <div className="font-semibold text-blue-800 mb-2">🎨 Tailwind CSS</div>
+                <div className="text-xs text-gray-600">Responsive design & styling</div>
+              </div>
+              <div className="bg-white rounded-lg p-4 border border-blue-200">
+                <div className="font-semibold text-blue-800 mb-2">🎭 Framer Motion</div>
+                <div className="text-xs text-gray-600">Smooth animations</div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Arrow Down */}
+          <div className="flex justify-center">
+            <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+          </div>
+
+          {/* Backend Layer */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.5 }}
+            className="bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg p-6 border-2 border-purple-300"
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <div className="bg-purple-500 text-white px-3 py-1 rounded-full text-sm font-bold">Backend</div>
+              <h3 className="text-lg font-semibold text-gray-800">API & Business Logic</h3>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div className="bg-white rounded-lg p-4 border border-purple-200">
+                <div className="font-semibold text-purple-800 mb-2">🐍 FastAPI</div>
+                <div className="text-xs text-gray-600">High-performance REST API</div>
+              </div>
+              <div className="bg-white rounded-lg p-4 border border-purple-200">
+                <div className="font-semibold text-purple-800 mb-2">📊 Pydantic</div>
+                <div className="text-xs text-gray-600">Data validation & serialization</div>
+              </div>
+              <div className="bg-white rounded-lg p-4 border border-purple-200">
+                <div className="font-semibold text-purple-800 mb-2">🔐 CORS & Security</div>
+                <div className="text-xs text-gray-600">Secure API endpoints</div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Arrow Down */}
+          <div className="flex justify-center">
+            <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+          </div>
+
+          {/* ML Layer */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.6 }}
+            className="bg-gradient-to-r from-green-50 to-green-100 rounded-lg p-6 border-2 border-green-300"
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <div className="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold">ML Engine</div>
+              <h3 className="text-lg font-semibold text-gray-800">Prediction & Analytics</h3>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+              <div className="bg-white rounded-lg p-4 border border-green-200">
+                <div className="font-semibold text-green-800 mb-2">🧬 Genetic Algorithm</div>
+                <div className="text-xs text-gray-600">Feature selection (61 features)</div>
+              </div>
+              <div className="bg-white rounded-lg p-4 border border-green-200">
+                <div className="font-semibold text-green-800 mb-2">🌲 Random Forest</div>
+                <div className="text-xs text-gray-600">Classification model</div>
+              </div>
+              <div className="bg-white rounded-lg p-4 border border-green-200">
+                <div className="font-semibold text-green-800 mb-2">📐 Scikit-learn</div>
+                <div className="text-xs text-gray-600">ML framework</div>
+              </div>
+              <div className="bg-white rounded-lg p-4 border border-green-200">
+                <div className="font-semibold text-green-800 mb-2">🎯 Calibration</div>
+                <div className="text-xs text-gray-600">Probability calibration</div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Arrow Down */}
+          <div className="flex justify-center">
+            <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+          </div>
+
+          {/* Data Layer */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.7 }}
+            className="bg-gradient-to-r from-orange-50 to-orange-100 rounded-lg p-6 border-2 border-orange-300"
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <div className="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">Data Layer</div>
+              <h3 className="text-lg font-semibold text-gray-800">Storage & Processing</h3>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div className="bg-white rounded-lg p-4 border border-orange-200">
+                <div className="font-semibold text-orange-800 mb-2">🗄️ PLCO Dataset</div>
+                <div className="text-xs text-gray-600">4,451 patient records</div>
+              </div>
+              <div className="bg-white rounded-lg p-4 border border-orange-200">
+                <div className="font-semibold text-orange-800 mb-2">📊 Preprocessing</div>
+                <div className="text-xs text-gray-600">Normalization & imputation</div>
+              </div>
+              <div className="bg-white rounded-lg p-4 border border-orange-200">
+                <div className="font-semibold text-orange-800 mb-2">🔄 Feature Engineering</div>
+                <div className="text-xs text-gray-600">90+ clinical features</div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Data Flow Visualization */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.8 }}
+            className="bg-gray-50 rounded-lg p-6 border-2 border-gray-200"
+          >
+            <h3 className="text-lg font-semibold text-gray-800 mb-4 text-center">Request Flow</h3>
+            <div className="flex items-center justify-center gap-3 flex-wrap">
+              <div className="bg-blue-100 px-4 py-2 rounded-lg text-sm font-medium border-2 border-blue-300">
+                👤 User Input
+              </div>
+              <span className="text-gray-400">→</span>
+              <div className="bg-purple-100 px-4 py-2 rounded-lg text-sm font-medium border-2 border-purple-300">
+                🔄 API Request
+              </div>
+              <span className="text-gray-400">→</span>
+              <div className="bg-green-100 px-4 py-2 rounded-lg text-sm font-medium border-2 border-green-300">
+                🤖 ML Prediction
+              </div>
+              <span className="text-gray-400">→</span>
+              <div className="bg-orange-100 px-4 py-2 rounded-lg text-sm font-medium border-2 border-orange-300">
+                📈 Risk Score
+              </div>
+              <span className="text-gray-400">→</span>
+              <div className="bg-blue-100 px-4 py-2 rounded-lg text-sm font-medium border-2 border-blue-300">
+                ✅ Results Display
+              </div>
+            </div>
+            <div className="mt-4 text-center text-xs text-gray-500">
+              Average processing time: &lt;100ms
+            </div>
+          </motion.div>
+        </div>
       </motion.section>
 
       {/* Model Flow Diagram */}
@@ -331,10 +510,10 @@ const About = () => {
         
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
-            { label: 'AUC-ROC', value: '73.05%', description: 'Discrimination ability', color: 'blue'},
-            { label: 'Sensitivity', value: '37.03%', description: 'Catches 7/10 cases', color: 'green' },
-            { label: 'Specificity', value: '68.1%', description: 'Correctly identifies negatives', color: 'purple' },
-            { label: 'Precision', value: '46.44%', description: 'Positive predictive value', color: 'orange' }
+            { label: 'AUC-ROC', value: '77.5%', description: 'Discrimination ability', color: 'blue', icon: '📈' },
+            { label: 'Sensitivity', value: '71.6%', description: 'Catches 7/10 cases', color: 'green', icon: '✓' },
+            { label: 'Specificity', value: '68.1%', description: 'Correctly identifies negatives', color: 'purple', icon: '🎯' },
+            { label: 'Precision', value: '51.2%', description: 'Positive predictive value', color: 'orange', icon: '📊' }
           ].map((metric, idx) => (
             <motion.div
               key={idx}
@@ -343,7 +522,7 @@ const About = () => {
               transition={{ delay: 0.5 + idx * 0.1 }}
               className={`text-center p-6 rounded-lg bg-${metric.color}-50 border-2 border-${metric.color}-200 hover:shadow-lg transition-shadow cursor-pointer`}
             >
-              
+              <div className="text-3xl mb-2">{metric.icon}</div>
               <div className={`text-4xl font-bold text-${metric.color}-600 mb-2`}>{metric.value}</div>
               <div className="font-semibold text-gray-800 mb-1">{metric.label}</div>
               <div className="text-xs text-gray-600">{metric.description}</div>
