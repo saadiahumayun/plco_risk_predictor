@@ -1,6 +1,7 @@
 import React from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Layout from './components/Layout'
+import Home from './pages/Home'
 import Dashboard from './pages/Dashboard'
 import RiskAssessment from './pages/RiskAssessment'
 import PatientHistory from './pages/PatientHistory'
@@ -14,7 +15,7 @@ const App: React.FC = () => {
     <Router>
       <Layout>
         <Routes>
-          <Route path="/" element={<Navigate to="/impact" replace />} />
+          <Route path="/" element={<Home />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/assessment" element={<RiskAssessment />} />
           <Route path="/history" element={<PatientHistory />} />
