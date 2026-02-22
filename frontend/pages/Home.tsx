@@ -256,6 +256,65 @@ const Home: React.FC = () => {
         </div>
       </section>
 
+      {/* Demo Section */}
+      <section className="py-24 bg-gradient-to-b from-white to-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <span className="inline-block text-primary font-semibold text-sm uppercase tracking-wider mb-3">
+              See It In Action
+            </span>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Product Demo
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Watch how CANDetect streamlines breast cancer risk assessment in clinical practice.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30, scale: 0.95 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="relative"
+          >
+            {/* Browser frame */}
+            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-2 shadow-2xl shadow-slate-900/30">
+              {/* Browser header */}
+              <div className="flex items-center gap-2 px-4 py-3 bg-slate-700/50 rounded-t-xl">
+                <div className="flex gap-1.5">
+                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                  <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                </div>
+                <div className="flex-1 mx-4">
+                  <div className="bg-slate-600/50 rounded-lg px-4 py-1.5 text-slate-400 text-sm text-center">
+                    candetect.app
+                  </div>
+                </div>
+              </div>
+              {/* GIF container */}
+              <div className="rounded-b-xl overflow-hidden">
+                <img 
+                  src="/caandetect.gif" 
+                  alt="CANDetect Application Demo" 
+                  className="w-full h-auto"
+                />
+              </div>
+            </div>
+
+            {/* Decorative elements */}
+            <div className="absolute -z-10 -top-8 -left-8 w-32 h-32 bg-rose-500/10 rounded-full blur-2xl"></div>
+            <div className="absolute -z-10 -bottom-8 -right-8 w-40 h-40 bg-pink-500/10 rounded-full blur-2xl"></div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* How It Works Section */}
       <section className="py-24 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

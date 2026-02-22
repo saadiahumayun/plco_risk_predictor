@@ -11237,3 +11237,12 @@
 {"timestamp": "2026-02-17T10:08:43.246012+00:00", "level": null, "name": "app.db.session", "funcName": "init_db", "message": "Database tables created successfully"}
 {"timestamp": "2026-02-17T10:08:43.246154+00:00", "level": null, "name": "app.main", "funcName": "lifespan", "message": "Loading ML models from MLflow..."}
 {"timestamp": "2026-02-17T10:08:43.246201+00:00", "level": null, "name": "app.main", "funcName": "lifespan", "message": "Application startup complete"}
+{"timestamp": "2026-02-20T06:04:45.125033+00:00", "level": null, "name": "app.core.logging", "funcName": "setup_logging", "message": "Logging configured - Level: INFO, Format: json, Environment: development"}
+{"timestamp": "2026-02-20T06:04:45.146894+00:00", "level": null, "name": "app.main", "funcName": "lifespan", "message": "Starting up breast cancer risk prediction API..."}
+{"timestamp": "2026-02-20T06:04:45.147103+00:00", "level": null, "name": "app.db.session", "funcName": "init_db", "message": "Creating database tables..."}
+{"timestamp": "2026-02-20T06:04:47.284458+00:00", "level": null, "name": "app.db.session", "funcName": "init_db", "message": "Database tables created successfully"}
+{"timestamp": "2026-02-20T06:04:47.284861+00:00", "level": null, "name": "app.main", "funcName": "lifespan", "message": "Loading ML models from MLflow..."}
+{"timestamp": "2026-02-20T06:04:47.284974+00:00", "level": null, "name": "app.main", "funcName": "lifespan", "message": "Application startup complete"}
+{"timestamp": "2026-02-20T06:05:24.404667+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Incoming GET request to /api/v1/predictions"}
+{"timestamp": "2026-02-20T06:05:26.248951+00:00", "level": null, "name": "app.main", "funcName": "log_requests", "message": "Completed GET /api/v1/predictions with status 200 in 1844.32ms"}
+{"timestamp": "2026-02-21T03:46:38.271873+00:00", "level": null, "name": "app.main", "funcName": "lifespan", "message": "Shutting down application..."}
