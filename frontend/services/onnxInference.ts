@@ -1,8 +1,10 @@
 import { PatientFormData, PredictionResult } from './offlineDb'
 
-// ONNX Runtime types (loaded dynamically)
-type OrtModule = typeof import('onnxruntime-web')
-type InferenceSession = import('onnxruntime-web').InferenceSession
+// ONNX Runtime types (loaded dynamically from CDN)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type OrtModule = any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type InferenceSession = any
 
 interface ScalerConfig {
   feature_names: string[]
