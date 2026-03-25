@@ -141,7 +141,7 @@ class SyncService {
 
       // Mark as synced
       await updateAssessmentSyncStatus(assessment.id, 'synced', {
-        server_id: response.prediction_id || response.id
+        server_id: response.prediction_id
       })
 
     } catch (error) {

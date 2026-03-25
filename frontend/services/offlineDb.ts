@@ -312,7 +312,6 @@ export async function updateSyncQueueItem(
 }
 
 export async function clearSyncedFromQueue(): Promise<void> {
-  const db = await getDB()
   const synced = await getAssessmentsByStatus('synced')
   for (const assessment of synced) {
     await removeFromSyncQueue(assessment.id)
