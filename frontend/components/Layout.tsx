@@ -43,6 +43,11 @@ const Icons = {
       <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
   ),
+  offline: (
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+    </svg>
+  ),
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
@@ -54,6 +59,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { path: '/dashboard', label: 'Dashboard', icon: Icons.dashboard },
     { path: '/assessment', label: 'Risk Assessment', icon: Icons.assessment },
     { path: '/validation', label: 'Validation', icon: Icons.validation },
+    { path: '/offline-assessment', label: 'LHW Mode', icon: Icons.offline, highlight: true },
   ]
   
   return (
@@ -80,7 +86,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             {/* Navigation */}
             <nav className="hidden lg:flex items-center space-x-2">
               {navItems.map(item => {
-                const isActive = location.pathname === item.path
+                const isActive = location.pathname === item.path || 
+                  (item.path === '/offline-assessment' && location.pathname === '/local-history')
+                const isHighlight = 'highlight' in item && item.highlight
                 return (
                   <Link
                     key={item.path}
@@ -90,7 +98,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                       transition-all duration-200 ease-in-out
                       ${isActive 
                         ? 'bg-primary text-white shadow-md' 
-                        : 'text-gray-600 hover:text-primary hover:bg-rose-50'
+                        : isHighlight
+                          ? 'bg-emerald-500 text-white hover:bg-emerald-600 shadow-sm'
+                          : 'text-gray-600 hover:text-primary hover:bg-rose-50'
                       }
                     `}
                   >
