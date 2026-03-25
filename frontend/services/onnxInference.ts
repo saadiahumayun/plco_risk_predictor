@@ -233,7 +233,8 @@ class LocalPredictor {
       const inputTensor = new this.ort.Tensor('float32', features, [1, features.length])
       
       // Run inference
-      const feeds: Record<string, unknown> = { input: inputTensor }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const feeds = { input: inputTensor } as any
       const results = await this.session.run(feeds)
 
       // Get the output (probability of positive class)
