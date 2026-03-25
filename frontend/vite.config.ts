@@ -64,7 +64,7 @@ export default defineConfig({
         categories: ['medical', 'health', 'productivity']
       },
       devOptions: {
-        enabled: true
+        enabled: false
       }
     })
   ],
@@ -72,6 +72,19 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, '.'),
     },
+  },
+  optimizeDeps: {
+    exclude: ['onnxruntime-web']
+  },
+  build: {
+    rollupOptions: {
+      external: ['onnxruntime-web'],
+      output: {
+        globals: {
+          'onnxruntime-web': 'ort'
+        }
+      }
+    }
   },
   server: {
     port: 3000,

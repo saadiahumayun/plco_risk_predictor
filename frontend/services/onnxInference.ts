@@ -1,5 +1,8 @@
-import * as ort from 'onnxruntime-web'
 import { PatientFormData, PredictionResult } from './offlineDb'
+
+// ONNX Runtime types (loaded dynamically)
+type OrtModule = typeof import('onnxruntime-web')
+type InferenceSession = import('onnxruntime-web').InferenceSession
 
 interface ScalerConfig {
   feature_names: string[]
@@ -18,11 +21,38 @@ interface ScalerConfig {
   defaults: Record<string, number>
 }
 
+// Dynamic ONNX Runtime loader
+let ortModule: OrtModule | null = null
+
+async function loadOnnxRuntime(): Promise<OrtModule | null> {
+  if (ortModule) return ortModule
+  
+  try {
+    // Try to load from CDN
+    const script = document.createElement('script')
+    script.src = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.17.0/dist/ort.min.js'
+    
+    await new Promise<void>((resolve, reject) => {
+      script.onload = () => resolve()
+      script.onerror = () => reject(new Error('Failed to load ONNX Runtime'))
+      document.head.appendChild(script)
+    })
+    
+    // Access the global ort object
+    ortModule = (window as unknown as { ort: OrtModule }).ort
+    return ortModule
+  } catch (error) {
+    console.warn('ONNX Runtime not available:', error)
+    return null
+  }
+}
+
 class LocalPredictor {
-  private session: ort.InferenceSession | null = null
+  private session: InferenceSession | null = null
   private scalerConfig: ScalerConfig | null = null
   private isInitialized = false
   private initPromise: Promise<void> | null = null
+  private ort: OrtModule | null = null
 
   async initialize(): Promise<void> {
     if (this.isInitialized) return
@@ -35,26 +65,33 @@ class LocalPredictor {
 
   private async _doInitialize(): Promise<void> {
     try {
-      // Configure ONNX Runtime for web
-      ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/'
-      
-      // Load scaler configuration
+      // Load scaler configuration first (always needed)
       const scalerResponse = await fetch('/models/scaler.json')
       if (!scalerResponse.ok) {
         throw new Error('Failed to load scaler configuration')
       }
       this.scalerConfig = await scalerResponse.json()
 
-      // Try to load the ONNX model
-      try {
-        this.session = await ort.InferenceSession.create('/models/candetect.onnx', {
-          executionProviders: ['wasm'],
-          graphOptimizationLevel: 'all',
-        })
-        console.log('ONNX model loaded successfully')
-      } catch (modelError) {
-        console.warn('ONNX model not available, using fallback prediction:', modelError)
-        this.session = null
+      // Try to load ONNX Runtime
+      this.ort = await loadOnnxRuntime()
+      
+      if (this.ort) {
+        // Configure ONNX Runtime for web
+        this.ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.17.0/dist/'
+        
+        // Try to load the ONNX model
+        try {
+          this.session = await this.ort.InferenceSession.create('/models/candetect.onnx', {
+            executionProviders: ['wasm'],
+            graphOptimizationLevel: 'all',
+          })
+          console.log('ONNX model loaded successfully')
+        } catch (modelError) {
+          console.warn('ONNX model not available, using fallback prediction:', modelError)
+          this.session = null
+        }
+      } else {
+        console.warn('ONNX Runtime not available, using fallback prediction')
       }
 
       console.log('LocalPredictor initialized')
@@ -187,16 +224,16 @@ class LocalPredictor {
   }
 
   private async runOnnxInference(features: Float32Array): Promise<number> {
-    if (!this.session) {
+    if (!this.session || !this.ort) {
       throw new Error('ONNX session not initialized')
     }
 
     try {
       // Create input tensor
-      const inputTensor = new ort.Tensor('float32', features, [1, features.length])
+      const inputTensor = new this.ort.Tensor('float32', features, [1, features.length])
       
       // Run inference
-      const feeds: Record<string, ort.Tensor> = { input: inputTensor }
+      const feeds: Record<string, unknown> = { input: inputTensor }
       const results = await this.session.run(feeds)
 
       // Get the output (probability of positive class)
